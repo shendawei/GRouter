@@ -24,7 +24,7 @@ public class Postcard {
 
     private String mPath;
     private Bundle mBundle;
-    private int mFlags = -1;         // Flags of route
+    private int mFlags = Integer.MAX_VALUE;         // Flags of route
     // Animation
     private Bundle optionsCompat;    // The transition animation of activity
     private int enterAnim = -1;
@@ -32,6 +32,7 @@ public class Postcard {
 
     public Postcard(String path) {
         this.mPath = path;
+        this.mBundle = new Bundle();
     }
 
     public String getPath() {
@@ -54,10 +55,7 @@ public class Postcard {
      * BE ATTENTION TO THIS METHOD WAS <P>SET, NOT ADD!</P>
      */
     public Postcard with(Bundle bundle) {
-        if (null != bundle) {
-            mBundle = bundle;
-        }
-
+        mBundle = bundle;
         return this;
     }
 

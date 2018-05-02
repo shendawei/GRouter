@@ -15,7 +15,7 @@ android {
         multiDexEnabled true
     }
 
-    dexOptions{
+    dexOptions {
         preDexLibraries false
     }
 
@@ -34,8 +34,8 @@ android {
 }
 
 routerExt {
-    targetPackageName = ['123','321','123321']
-    filterPackageName = ['qqq','www','eee']
+    targetPackageName = ['123', '321', '123321']
+    filterPackageName = ['qqq', 'www', 'eee']
 }
 
 dependencies {
