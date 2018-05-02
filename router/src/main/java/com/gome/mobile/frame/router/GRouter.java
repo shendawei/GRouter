@@ -1,5 +1,15 @@
 package com.gome.mobile.frame.router;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Log;
+
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 
@@ -11,6 +21,7 @@ import java.util.HashMap;
  */
 public class GRouter {
 
+    private static final String TAG = GRouter.class.getName();
     private static final GRouter router = new GRouter();
 
     private GRouter() {
@@ -50,6 +61,21 @@ public class GRouter {
         }
     }
 
+    void navigation(Context context, Postcard postcard, int requestCode) {
+        if (context == null) {
+            throw new RuntimeException("Context is null");
+        }
+        if (null == postcard) {
+            throw new RuntimeException(TAG + " :: No postcard!");
+        }
+        Class targetClass = getClass(postcard.getPath());
+        Intent intent = new Intent(context, targetClass);
+        intent.putExtras(postcard.getBundle());
+        intent.addFlags(postcard.getFlags());
+        ((AppCompatActivity)context).startActivityForResult(intent, requestCode);
+
+    }
+
     /**
      * 获取 class
      *
@@ -57,11 +83,57 @@ public class GRouter {
      * @return
      */
     public Class getClass(String path) {
-        Class activityClass = mClassMap.get(path);
-        if (activityClass == null) {
+        Class targetClass = mClassMap.get(path);
+        if (targetClass == null) {
             throw new RuntimeException(String.format("Activity for path:%s not found", path));
         }
-        return activityClass;
+        return targetClass;
+    }
+
+
+    /**
+     * 获取 fragment实例
+     * @param path
+     * @param bundle
+     * @return
+     */
+    public Object getFragmentInstance(String path, Bundle bundle) {
+        Class fragmentClass = getClass(path);
+        try {
+            Object instance = fragmentClass.getConstructor().newInstance();
+            if (instance instanceof Fragment) {
+                ((Fragment)instance).setArguments(bundle);
+            }
+            return instance;
+        } catch (Exception ex) {
+            Log.e(TAG, "Fetch fragment instance error, " + ex.getStackTrace());
+        }
+        return null;
+    }
+
+
+    public Postcard build(String path) {
+        if (TextUtils.isEmpty(path)) {
+            throw new IllegalArgumentException("Parameter is invalid! path = " + path);
+        } else {
+            return new Postcard(path);
+        }
+    }
+
+    public Postcard build(Uri uri) {
+        if (uri == null || TextUtils.isEmpty(uri.toString())) {
+            throw new IllegalArgumentException("Parameter is invalid! uri = " + uri);
+        } else {
+            return new Postcard(uri.getPath());
+        }
+    }
+
+    public void navigation(Context context, String path, int requestCode) {
+        navigation(context, new Postcard(path), requestCode);
+    }
+
+    public void navigation(Context context, String path) {
+        navigation(context, new Postcard(path), -1);
     }
 
 }

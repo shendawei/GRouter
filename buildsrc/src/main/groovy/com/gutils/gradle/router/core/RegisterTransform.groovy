@@ -63,6 +63,15 @@ class RegisterTransform extends Transform {
 
         Logger.i('Start scan register info in jar file.')
 
+        // collect target package name list
+        Logger.i("targetList is ${project.routerExt.targetPackageName}")
+        ScanSetting.TARGET_LIST.clear()
+        ScanSetting.TARGET_LIST.add(project.routerExt.targetPackageName)
+        // collect filter package name list
+        Logger.i("targetList is ${project.routerExt.filterPackageName}")
+        ScanSetting.FILTER_LIST.clear()
+        ScanSetting.FILTER_LIST.add(project.routerExt.filterPackageName)
+
         long startTime = System.currentTimeMillis()
         boolean leftSlash = File.separator == '/'
 

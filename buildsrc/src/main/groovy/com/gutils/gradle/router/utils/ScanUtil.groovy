@@ -1,6 +1,8 @@
 package com.gutils.gradle.router.utils
 
 import com.gutils.gradle.router.core.RegisterTransform
+import org.gradle.internal.impldep.org.apache.http.util.TextUtils
+import org.gradle.util.TextUtil
 import org.objectweb.asm.*
 
 import java.util.jar.JarEntry
@@ -40,10 +42,21 @@ class ScanUtil {
     }
 
     static boolean shouldProcessPreDexJar(String path) {
+        for (String packageName in ScanSetting.FILTER_LIST) {
+            if (packageName != null && packageName.contains(path)) {
+                return false
+            }
+        }
         return !path.contains("com.android.support") && !path.contains("/android/m2repository")
     }
 
     static boolean shouldProcessClass(String entryName) {
+        String currentEntryName = entryName.replaceAll("/", ".")
+        for (String packageName in ScanSetting.TARGET_LIST) {
+            if (packageName != null && packageName.contains(currentEntryName)) {
+                return true
+            }
+        }
         return entryName != null && entryName.startsWith(ScanSetting.ROUTER_CLASS_PACKAGE_NAME)
     }
 

@@ -1,4 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.gome.mobile.frame.router">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.gome.mobile.frame.router">
+
+    <application>
+        <activity android:name=".SchemeFilterActivity">
+
+            <!-- Scheme -->
+            <intent-filter>
+                <data
+                        android:host="m.gome.com.cn"
+                        android:scheme="https"/>
+
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+
+            <!-- App Links -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                        android:host="mcp.m.gome.com.cn"
+                        android:scheme="http"/>
+                <data
+                        android:host="mcp.mobile.gome.com.cn"
+                        android:scheme="https"/>
+            </intent-filter>
+        </activity>
+    </application>
 
 </manifest>

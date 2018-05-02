@@ -30,6 +30,17 @@ class ScanSetting {
      * register method name in class: {@link #GENERATE_TO_CLASS_NAME}
      */
     static final String REGISTER_METHOD_NAME = 'register'
+
+    /**
+     * 需要扫描的包名列表
+     */
+    static ArrayList<String> TARGET_LIST = new ArrayList<>();
+
+    /**
+     * 需要过滤的包名列表
+     */
+    static ArrayList<String> FILTER_LIST = new ArrayList<>()
+
     /**
      * scan for classes which implements this interface
      */

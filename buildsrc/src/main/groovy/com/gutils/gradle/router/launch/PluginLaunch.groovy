@@ -2,6 +2,7 @@ package com.gutils.gradle.router.launch
 
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.AppPlugin
+import com.gutils.gradle.router.config.GRouterExt
 import com.gutils.gradle.router.core.RegisterTransform
 import com.gutils.gradle.router.utils.Logger
 import com.gutils.gradle.router.utils.ScanSetting
@@ -17,6 +18,9 @@ public class PluginLaunch implements Plugin<Project> {
     @Override
     public void apply(Project project) {
         def isApp = project.plugins.hasPlugin(AppPlugin)
+        project.extensions.create('routerExt', GRouterExt)
+
+
         //only application module needs this plugin to generate register code
         if (isApp) {
             Logger.make(project)
