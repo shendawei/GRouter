@@ -1,12 +1,35 @@
+ext {
+    groupId = "com.gome.mcp"
+//    version = getProperty("AAR_MVP_VERSION")
+    version = "2.3.1-v1"
+    artifactId = "router.plugin"
+    packaging = "jar"
+}
 repositories {
     jcenter()
 }
 
 apply plugin: 'groovy'
+apply plugin: 'maven'
+
 
 dependencies {
     compile gradleApi()
     compile localGroovy()
 
     compile 'com.android.tools.build:gradle:2.3.0'
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        name = 'AARDeployer'
+        repository(url: "http://10.115.3.135:8081/nexus/content/repositories/releases/") {
+            authentication(userName: "deployment", password: "qiudongchao1988")
+        }
+        pom.version = project.ext.version
+        pom.artifactId = project.ext.artifactId
+        pom.groupId = project.ext.groupId
+        pom.name = project.ext.artifactId
+        pom.packaging = project.ext.packaging
+    }
 }
