@@ -66,11 +66,11 @@ class RegisterTransform extends Transform {
         // collect target package name list
         Logger.i("targetList is ${project.routerExt.targetPackageName}")
         ScanSetting.TARGET_LIST.clear()
-        ScanSetting.TARGET_LIST.add(project.routerExt.targetPackageName)
+        ScanSetting.TARGET_LIST.addAll(project.routerExt.targetPackageName)
         // collect filter package name list
         Logger.i("targetList is ${project.routerExt.filterPackageName}")
         ScanSetting.FILTER_LIST.clear()
-        ScanSetting.FILTER_LIST.add(project.routerExt.filterPackageName)
+        ScanSetting.FILTER_LIST.addAll(project.routerExt.filterPackageName)
 
         long startTime = System.currentTimeMillis()
         boolean leftSlash = File.separator == '/'

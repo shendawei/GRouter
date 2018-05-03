@@ -1,4 +1,4 @@
-package com.gome.mobile.frame.router;
+package com.gome.mobile.frame.router.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -10,6 +10,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Target(ElementType.TYPE)
 @Retention(RUNTIME)
-public @interface IRouter {
+public @interface IService {
     String value();
 }

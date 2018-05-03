@@ -4,11 +4,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.gome.mobile.frame.router.IRouter;
+import com.gome.mobile.frame.router.annotation.IActivity;
+import com.gome.mobile.frame.router.annotation.IRouter;
 
 import cn.gome.staff.R;
 
-@IRouter("/demo/test4")
+@IActivity("/demo/test4")
 public class TestFromWebActivity extends AppCompatActivity {
 
     @Override

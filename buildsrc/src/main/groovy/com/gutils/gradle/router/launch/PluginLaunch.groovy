@@ -32,8 +32,11 @@ public class PluginLaunch implements Plugin<Project> {
             def transformImpl = new RegisterTransform(project)
 
             //init arouter-auto-register settings
-            ArrayList<ScanSetting> list = new ArrayList<>(1)
+            ArrayList<ScanSetting> list = new ArrayList<>(4)
             list.add(new ScanSetting('IRouter'))
+            list.add(new ScanSetting('IService'))
+            list.add(new ScanSetting('IActivity'))
+            list.add(new ScanSetting('IFragment'))
             RegisterTransform.registerList = list
             //register this plugin
             android.registerTransform(transformImpl)

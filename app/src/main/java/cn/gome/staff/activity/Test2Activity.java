@@ -5,11 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.gome.mobile.frame.router.IRouter;
+import com.gome.mobile.frame.router.annotation.IActivity;
+import com.gome.mobile.frame.router.annotation.IRouter;
 
 import cn.gome.staff.R;
 
-@IRouter("/demo/test2")
+@IActivity("/demo/test2")
 public class Test2Activity extends AppCompatActivity {
 
     @Override

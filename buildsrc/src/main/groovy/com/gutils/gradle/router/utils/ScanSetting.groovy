@@ -24,7 +24,7 @@ class ScanSetting {
     /**
      * The package name of the interfaces
      */
-    private static final INTERFACE_PACKAGE_NAME = 'com/gome/mobile/frame/router/'
+    private static final INTERFACE_PACKAGE_NAME = 'com/gome/mobile/frame/router/annotation/'
 
     /**
      * register method name in class: {@link #GENERATE_TO_CLASS_NAME}

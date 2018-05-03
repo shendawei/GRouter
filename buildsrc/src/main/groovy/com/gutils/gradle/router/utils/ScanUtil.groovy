@@ -27,7 +27,7 @@ class ScanUtil {
             while (enumeration.hasMoreElements()) {
                 JarEntry jarEntry = (JarEntry) enumeration.nextElement()
                 String entryName = jarEntry.getName()
-                if (entryName.startsWith(ScanSetting.ROUTER_CLASS_PACKAGE_NAME)) {
+                if (containsTargetPackage(entryName)) {
                     InputStream inputStream = file.getInputStream(jarEntry)
                     scanClass(inputStream)
                     inputStream.close()
@@ -41,9 +41,19 @@ class ScanUtil {
         }
     }
 
+    private static boolean containsTargetPackage(String entryName) {
+        String currentEntryName = entryName.replaceAll("/", ".")
+        for (String packageName : ScanSetting.TARGET_LIST) {
+            if (currentEntryName.contains(packageName)) {
+                return true
+            }
+        }
+        return entryName.startsWith(ScanSetting.ROUTER_CLASS_PACKAGE_NAME)
+    }
+
     static boolean shouldProcessPreDexJar(String path) {
         for (String packageName in ScanSetting.FILTER_LIST) {
-            if (packageName != null && packageName.contains(path)) {
+            if (packageName != null && path.contains(packageName)) {
                 return false
             }
         }
@@ -93,6 +103,7 @@ class ScanUtil {
             return super.visitAnnotation(desc, visible)
         }
 
+        @Override
         void visit(int version, int access, String name, String signature,
                    String superName, String[] interfaces) {
             super.visit(version, access, name, signature, superName, interfaces)

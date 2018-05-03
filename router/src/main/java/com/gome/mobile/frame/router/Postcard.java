@@ -1,7 +1,6 @@
 package com.gome.mobile.frame.router;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -11,7 +10,6 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.util.SparseArray;
 
-import com.gome.mobile.frame.router.callback.NavigationCallback;
 import com.gome.mobile.frame.router.utils.JSONUtil;
 
 import java.io.Serializable;

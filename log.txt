@@ -1,0 +1,21 @@
+To honour the JVM settings for this build a new JVM will be forked. Please consider using the daemon: https://docs.gradle.org/4.7/userguide/gradle_daemon.html.
+Daemon will be stopped at the end of the build stopping after processing
+Parallel execution is an incubating feature.
+Ran lint on variant debug: 1 issues found
+Ran lint on variant release: 1 issues found
+Preparing output jar [/Users/luciuszhang/development/workspaces/company/GRouter/app/build/intermediates/multi-dex/debug/componentClasses.jar]
+  Copying resources from program jar [/Users/luciuszhang/development/workspaces/company/GRouter/app/build/intermediates/transforms/jarMerging/debug/jars/1/1f/combined.jar]
+Ran lint on variant release: 2 issues found
+Ran lint on variant debug: 2 issues found
+Wrote HTML report to file:///Users/luciuszhang/development/workspaces/company/GRouter/RouterTestLibrary/build/reports/lint-results.html
+Wrote XML report to file:///Users/luciuszhang/development/workspaces/company/GRouter/RouterTestLibrary/build/reports/lint-results.xml
+Ran lint on variant debug: 27 issues found
+Ran lint on variant release: 27 issues found
+Wrote HTML report to file:///Users/luciuszhang/development/workspaces/company/GRouter/app/build/reports/lint-results.html
+Wrote XML report to file:///Users/luciuszhang/development/workspaces/company/GRouter/app/build/reports/lint-results.xml
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 5.0.
+See https://docs.gradle.org/4.7/userguide/command_line_interface.html#sec:command_line_warnings
+
+BUILD SUCCESSFUL in 33s
+203 actionable tasks: 203 executed

@@ -2,9 +2,10 @@ package cn.gome.staff.fragment;
 
 import android.support.v4.app.Fragment;
 
-import com.gome.mobile.frame.router.IRouter;
+import com.gome.mobile.frame.router.annotation.IFragment;
+import com.gome.mobile.frame.router.annotation.IRouter;
 
-@IRouter("/demo/test3_fragment")
+@IFragment("/demo/test3_fragment")
 public class Test3Fragment extends Fragment {
 
 

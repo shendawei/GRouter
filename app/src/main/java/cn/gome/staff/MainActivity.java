@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -11,16 +12,20 @@ import com.gome.mobile.frame.router.GRouter;
 
 public class MainActivity extends Activity {
 
+    private static final String TAG = MainActivity.class.getName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        TestDemo1 demo1 = new TestDemo1();
 
         // 标准跳转
         findViewById(R.id.router_normal).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "click here");
                 startActivity(new Intent(MainActivity.this, GRouter.getInstance().getClass("abc")));
             }
         });
