@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.gome.mobile.frame.router.GRouter;
 import com.gome.mobile.frame.router.annotation.IActivity;
 import com.gome.mobile.frame.router.annotation.IRouter;
 
@@ -23,5 +24,7 @@ public class TestFromWebActivity extends AppCompatActivity {
         if (bundle != null) {
             tv.setText("Arg1 = " + bundle.getString("arg1") + "; Arg2 = " + bundle.getString("arg2"));
         }
+
+        GRouter.getInstance().navigationService("/demo/service");
     }
 }

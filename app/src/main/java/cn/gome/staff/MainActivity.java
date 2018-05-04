@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        // 标砖跳转带参数 @IRouter("/demo/test1")
+        // 标砖 @IRouter("/demo/test1")
         findViewById(R.id.router_grouter).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

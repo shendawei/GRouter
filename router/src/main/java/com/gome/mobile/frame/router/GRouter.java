@@ -16,6 +16,7 @@ import com.gome.mobile.frame.router.annotation.IService;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Gome IRouter
@@ -202,7 +203,20 @@ public class GRouter {
         if (uri == null || !(uri instanceof Uri) || TextUtils.isEmpty(uri.toString())) {
             throw new IllegalArgumentException("Parameter is invalid! uri = " + uri);
         } else {
-            return new Postcard(uri.getPath());
+            Set<String> argsName = uri.getQueryParameterNames();
+            Bundle bundle = null;
+            if (!TextUtils.isEmpty(uri.getQuery())) {
+                bundle = new Bundle();
+                for (String key : argsName) {
+                    String value = uri.getQueryParameter(key);
+                    bundle.putString(key, value);
+                }
+            }
+            Postcard postcard = new Postcard(uri.getPath());
+            if (bundle != null) {
+                postcard.with(bundle);
+            }
+            return postcard;
         }
     }
 
