@@ -1,17 +1,19 @@
 ext {
     groupId = "com.gome.mcp"
-//    version = getProperty("AAR_MVP_VERSION")
-    version = "2.3.0-v3"
-    artifactId = "router"
+    version = "1.0"
+    artifactId = "testkt"
     packaging = "aar"
+    kotlin = true
 }
 
 apply from: project.rootProject.uri('gradle/module.gradle')
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile deps.SFastJson
-    compile deps.SAppcompat
-}
 
-apply from: project.rootProject.uri('gradle/maven.gradle')
+    compile deps.SAppcompat
+    compile deps.GKtx
+//    compile deps.GRouter
+    compile project(':router')
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+}

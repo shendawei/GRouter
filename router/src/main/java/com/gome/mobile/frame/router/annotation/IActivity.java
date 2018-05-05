@@ -22,5 +22,5 @@ public @interface IActivity {
      * 外部链接跳转应用地址
      * @return
      */
-    String html();
+    String html() default "";
 }

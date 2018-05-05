@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.gome.mobile.frame.router.GRouter;
+import com.tech.integer.testkt.TestActivity;
+
 
 public class MainActivity extends Activity {
 
@@ -72,8 +74,11 @@ public class MainActivity extends Activity {
         findViewById(R.id.router_interface).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                GRouter.getInstance().navigation(MainActivity.this, "/test/ktx");
             }
         });
+
+        TestActivity temp;
+
     }
 }

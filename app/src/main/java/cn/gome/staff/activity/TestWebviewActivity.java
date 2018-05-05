@@ -4,11 +4,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.webkit.WebView;
 
+import com.gome.mobile.frame.router.annotation.IActivity;
 import com.gome.mobile.frame.router.annotation.IRouter;
 
 import cn.gome.staff.R;
 
-@IRouter("/demo/webview")
+@IActivity("/demo/webview")
 public class TestWebviewActivity extends AppCompatActivity {
 
 

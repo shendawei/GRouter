@@ -97,14 +97,16 @@ public class GRouter {
             IActivity activity = (IActivity) anno;
             String innerKey = activity.value();
             String htmlKey = activity.html();
-            if (mActivityClassMap.containsKey(innerKey)) {
+            if (innerKey != null && mActivityClassMap.containsKey(innerKey)) {
                 throw new RuntimeException("GRouter contains same path->" + innerKey);
+            } else {
+                mActivityClassMap.put(innerKey, className);
             }
             if (mActivityClassMap.containsKey(htmlKey)) {
                 throw new RuntimeException("GRouter contains same path->" + htmlKey);
+            } else if (htmlKey != null && htmlKey.length() > 0) {
+                mActivityClassMap.put(htmlKey, className);
             }
-            mActivityClassMap.put(innerKey, className);
-            mActivityClassMap.put(htmlKey, className);
             return true;
         } else if (annotationTypeName.equals(IFragment.class.getName())) {
             IFragment fragment = (IFragment) anno;
