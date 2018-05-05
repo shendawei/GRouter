@@ -11,5 +11,16 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target(ElementType.TYPE)
 @Retention(RUNTIME)
 public @interface IActivity {
+
+    /**
+     * 应用内部跳转链接地址
+     * @return
+     */
     String value();
+
+    /**
+     * 外部链接跳转应用地址
+     * @return
+     */
+    String html();
 }

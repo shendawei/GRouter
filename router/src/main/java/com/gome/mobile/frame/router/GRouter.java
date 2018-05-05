@@ -68,6 +68,7 @@ public class GRouter {
             return;
         }
         registerClass(className, IRouter.class);
+
     }
 
     private static boolean registerClass(Class className, Class annotationType) throws Exception {
@@ -84,8 +85,7 @@ public class GRouter {
             }
             mClassMap.put(key, className);
             return true;
-        }
-        if (annotationTypeName.equals(IService.class.getName())) {
+        } else if (annotationTypeName.equals(IService.class.getName())) {
             IService service = (IService) anno;
             String key = service.value();
             if (mServiceClassMap.containsKey(key)) {
@@ -93,17 +93,20 @@ public class GRouter {
             }
             mServiceClassMap.put(key, className);
             return true;
-        }
-        if (annotationTypeName.equals(IActivity.class.getName())) {
+        } else if (annotationTypeName.equals(IActivity.class.getName())) {
             IActivity activity = (IActivity) anno;
-            String key = activity.value();
-            if (mActivityClassMap.containsKey(key)) {
-                throw new RuntimeException("GRouter contains same path->" + key);
+            String innerKey = activity.value();
+            String htmlKey = activity.html();
+            if (mActivityClassMap.containsKey(innerKey)) {
+                throw new RuntimeException("GRouter contains same path->" + innerKey);
             }
-            mActivityClassMap.put(key, className);
+            if (mActivityClassMap.containsKey(htmlKey)) {
+                throw new RuntimeException("GRouter contains same path->" + htmlKey);
+            }
+            mActivityClassMap.put(innerKey, className);
+            mActivityClassMap.put(htmlKey, className);
             return true;
-        }
-        if (annotationTypeName.equals(IFragment.class.getName())) {
+        } else if (annotationTypeName.equals(IFragment.class.getName())) {
             IFragment fragment = (IFragment) anno;
             String key = fragment.value();
             if (mFragmentClassMap.containsKey(key)) {

@@ -42,6 +42,9 @@ class ScanUtil {
     }
 
     private static boolean containsTargetPackage(String entryName) {
+        if (entryName == null || !entryName.endsWith(".class")) {
+            return false
+        }
         String currentEntryName = entryName.replaceAll("/", ".")
         for (String packageName : ScanSetting.TARGET_LIST) {
             if (currentEntryName.contains(packageName)) {
@@ -61,6 +64,9 @@ class ScanUtil {
     }
 
     static boolean shouldProcessClass(String entryName) {
+        if (entryName == null || !entryName.endsWith(".class")) {
+            return false
+        }
         String currentEntryName = entryName.replaceAll("/", ".")
         for (String packageName in ScanSetting.TARGET_LIST) {
             if (packageName != null && packageName.contains(currentEntryName)) {
