@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -225,15 +226,15 @@ public class GRouter {
         }
     }
 
-    void navigation(Context context, Postcard postcard, int requestCode) {
-        if (context == null) {
+    void navigation(Activity activity, Postcard postcard, int requestCode) {
+        if (activity == null) {
             throw new RuntimeException("Context is null");
         }
         if (null == postcard) {
             throw new RuntimeException(TAG + " :: No postcard!");
         }
         Class targetClass = getActivityClass(postcard.getPath());
-        Intent intent = new Intent(context, targetClass);
+        Intent intent = new Intent(activity, targetClass);
         Bundle bundle = postcard.getBundle();
         if (bundle != null) {
             intent.putExtras(postcard.getBundle());
@@ -242,15 +243,45 @@ public class GRouter {
         if (flags != Integer.MAX_VALUE) {
             intent.addFlags(postcard.getFlags());
         }
-        ((Activity)context).startActivityForResult(intent, requestCode);
+        activity.startActivityForResult(intent, requestCode);
     }
 
-    public void navigation(Context context, String path, int requestCode) {
-        navigation(context, new Postcard(path), requestCode);
+    public void navigation(Activity activity, String path, int requestCode) {
+        navigation(activity, new Postcard(path), requestCode);
     }
 
-    public void navigation(Context context, String path) {
-        navigation(context, new Postcard(path), -1);
+    public void navigation(Activity activity, String path) {
+        navigation(activity, new Postcard(path), -1);
     }
+
+    void navigation(Fragment fragment, Postcard postcard, int requestCode) {
+        if (fragment == null) {
+            throw new RuntimeException("Context is null");
+        }
+        if (null == postcard) {
+            throw new RuntimeException(TAG + " :: No postcard!");
+        }
+        Class targetClass = getActivityClass(postcard.getPath());
+        Intent intent = new Intent(fragment.getActivity(), targetClass);
+        Bundle bundle = postcard.getBundle();
+        if (bundle != null) {
+            intent.putExtras(postcard.getBundle());
+        }
+        int flags = postcard.getFlags();
+        if (flags != Integer.MAX_VALUE) {
+            intent.addFlags(postcard.getFlags());
+        }
+        fragment.startActivityForResult(intent, requestCode);
+    }
+
+    public void navigation(Fragment fragment, String path, int requestCode) {
+        navigation(fragment, new Postcard(path), requestCode);
+    }
+
+    public void navigation(Fragment fragment, String path) {
+        navigation(fragment, new Postcard(path), -1);
+    }
+
+
 
 }

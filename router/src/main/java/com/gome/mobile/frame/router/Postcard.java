@@ -8,6 +8,7 @@ import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
 import android.util.SparseArray;
 
 import com.gome.mobile.frame.router.utils.JSONUtil;
@@ -41,12 +42,20 @@ public class Postcard {
         return mBundle;
     }
 
-    public void navigation(Activity mContext) {
-        navigation(mContext, -1);
+    public void navigation(Activity activity) {
+        navigation(activity, -1);
     }
 
-    public void navigation(Activity mContext, int requestCode) {
-        GRouter.getInstance().navigation(mContext, this,  requestCode);
+    public void navigation(Activity activity, int requestCode) {
+        GRouter.getInstance().navigation(activity, this,  requestCode);
+    }
+
+    public void navigation(Fragment fragment) {
+        navigation(fragment, -1);
+    }
+
+    public void navigation(Fragment fragment, int requestCode) {
+        GRouter.getInstance().navigation(fragment, this, requestCode);
     }
 
     /**
