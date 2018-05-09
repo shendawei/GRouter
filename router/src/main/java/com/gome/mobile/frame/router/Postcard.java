@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.util.SparseArray;
 
+import com.gome.mobile.frame.router.intf.NavigationCallback;
 import com.gome.mobile.frame.router.utils.JSONUtil;
 
 import java.io.Serializable;
@@ -18,16 +19,25 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 
+/**
+ * 路由数据传递对象
+ *
+ * @author luciuszhang
+ * @date 2018/05/09
+ */
 public class Postcard {
 
 
     private String mPath;
     private Bundle mBundle;
-    private int mFlags = Integer.MAX_VALUE;         // Flags of route
-    // Animation
-    private Bundle optionsCompat;    // The transition animation of activity
+    /**
+     * Activity Flags
+     */
+    private int mFlags = Integer.MAX_VALUE;
+    private Bundle optionsCompat;
     private int enterAnim = -1;
     private int exitAnim = -1;
+    private NavigationCallback mCallback;
 
     public Postcard(String path) {
         this.mPath = path;
@@ -40,6 +50,15 @@ public class Postcard {
 
     public Bundle getBundle() {
         return mBundle;
+    }
+
+    public NavigationCallback getCallback() {
+        return mCallback;
+    }
+
+    public Postcard withCallback(NavigationCallback callback) {
+        this.mCallback = callback;
+        return this;
     }
 
     public void navigation(Activity activity) {

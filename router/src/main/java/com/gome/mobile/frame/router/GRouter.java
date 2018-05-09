@@ -14,6 +14,7 @@ import com.gome.mobile.frame.router.annotation.IActivity;
 import com.gome.mobile.frame.router.annotation.IFragment;
 import com.gome.mobile.frame.router.annotation.IRouter;
 import com.gome.mobile.frame.router.annotation.IService;
+import com.gome.mobile.frame.router.intf.NavigationCallback;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
@@ -50,7 +51,7 @@ public class GRouter {
     /**
      * 初始化GRouter
      */
-    public void init() throws Exception {
+    public void init() {
     }
 
     /**
@@ -58,7 +59,7 @@ public class GRouter {
      *
      * @param className
      */
-    private static void register(Class className) throws Exception {
+    private static void register(Class className){
         if (registerClass(className, IFragment.class)) {
             return;
         }
@@ -72,7 +73,7 @@ public class GRouter {
 
     }
 
-    private static boolean registerClass(Class className, Class annotationType) throws Exception {
+    private static boolean registerClass(Class className, Class annotationType){
         Annotation anno = className.getAnnotation(annotationType);
         if (anno == null || annotationType == null) {
             return false;
@@ -129,25 +130,16 @@ public class GRouter {
      */
     public Class getClass(String path) {
         Class targetClass = mClassMap.get(path);
-        if (targetClass == null) {
-            throw new RuntimeException(String.format("Activity for path:%s not found", path));
-        }
         return targetClass;
     }
 
     private Class getServiceClass(String path) {
         Class targetClass = mServiceClassMap.get(path);
-        if (targetClass == null) {
-            throw new RuntimeException(String.format("service for path:%s not found", path));
-        }
         return targetClass;
     }
 
     private Class getFragmentClass(String path) {
         Class targetClass = mFragmentClassMap.get(path);
-        if (targetClass == null) {
-            throw new RuntimeException(String.format("fragment for path:%s not found", path));
-        }
         return targetClass;
     }
 
@@ -166,8 +158,19 @@ public class GRouter {
      * @param bundle
      * @return
      */
-    public Fragment navigationFragment(String path, Bundle bundle) {
+    public Fragment navigationFragment(String path, Bundle bundle, NavigationCallback callback) {
         Class fragmentClass = getFragmentClass(path);
+        if (fragmentClass == null) {
+            if (callback != null) {
+                callback.onLost(new Postcard(path).with(bundle));
+            }
+            Log.e(TAG, "target Fragment: " + path + " nor found!");
+            return null;
+        } else {
+            if (callback != null) {
+                callback.onFound(new Postcard(path).with(bundle));
+            }
+        }
         try {
             Object instance = fragmentClass.getConstructor().newInstance();
             if (instance instanceof Fragment && bundle != null) {
@@ -176,8 +179,18 @@ public class GRouter {
             return (Fragment) instance;
         } catch (Exception ex) {
             Log.e(TAG, "Fetch fragment instance error, " + ex.getStackTrace());
+            if (callback != null) {
+                callback.onInterrupt(new Postcard(path).with(bundle));
+            }
+        }
+        if (callback != null) {
+            callback.onArrival(new Postcard(path).with(bundle));
         }
         return null;
+    }
+
+    public Fragment navigationFragment(String path, Bundle bundle) {
+        return navigationFragment(path, bundle, null);
     }
 
     public Fragment navigationFragment(String path) {
@@ -185,15 +198,34 @@ public class GRouter {
     }
 
 
-    public Object navigationService(String path) {
+    public Object navigationService(String path, NavigationCallback callback) {
         Class serviceClass = getServiceClass(path);
+        if (serviceClass == null) {
+            if (callback != null) {
+                callback.onLost(new Postcard(path));
+            }
+        } else {
+            if (callback != null) {
+                callback.onFound(new Postcard(path));
+            }
+        }
         try {
             Object instance = serviceClass.getConstructor().newInstance();
             return instance;
         } catch (Exception ex) {
             Log.e(TAG, "Fetch Service instance error, " + ex.getStackTrace());
+            if (callback != null) {
+                callback.onInterrupt(new Postcard(path));
+            }
+        }
+        if (callback != null) {
+            callback.onArrival(new Postcard(path));
         }
         return null;
+    }
+
+    public Object navigationService(String path) {
+        return navigationService(path, null);
     }
 
 
@@ -234,6 +266,18 @@ public class GRouter {
             throw new RuntimeException(TAG + " :: No postcard!");
         }
         Class targetClass = getActivityClass(postcard.getPath());
+        NavigationCallback callback = postcard.getCallback();
+        if (targetClass == null) {
+            if (callback != null) {
+                callback.onLost(postcard);
+            }
+            Log.e(TAG, "target Activity: "+ postcard.getPath() +"  not found");
+            return;
+        } else {
+            if (callback != null) {
+                callback.onFound(postcard);
+            }
+        }
         Intent intent = new Intent(activity, targetClass);
         Bundle bundle = postcard.getBundle();
         if (bundle != null) {
@@ -244,6 +288,9 @@ public class GRouter {
             intent.addFlags(postcard.getFlags());
         }
         activity.startActivityForResult(intent, requestCode);
+        if (callback != null) {
+            callback.onArrival(postcard);
+        }
     }
 
     public void navigation(Activity activity, String path, int requestCode) {
@@ -262,6 +309,18 @@ public class GRouter {
             throw new RuntimeException(TAG + " :: No postcard!");
         }
         Class targetClass = getActivityClass(postcard.getPath());
+        NavigationCallback callback = postcard.getCallback();
+        if (targetClass == null) {
+            if (callback != null) {
+                callback.onLost(postcard);
+            }
+            Log.e(TAG, "target Activity: "+ postcard.getPath() +"  not found");
+            return;
+        } else {
+            if (callback != null) {
+                callback.onFound(postcard);
+            }
+        }
         Intent intent = new Intent(fragment.getActivity(), targetClass);
         Bundle bundle = postcard.getBundle();
         if (bundle != null) {
@@ -272,6 +331,9 @@ public class GRouter {
             intent.addFlags(postcard.getFlags());
         }
         fragment.startActivityForResult(intent, requestCode);
+        if (callback != null) {
+            callback.onArrival(postcard);
+        }
     }
 
     public void navigation(Fragment fragment, String path, int requestCode) {
