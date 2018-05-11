@@ -1,6 +1,7 @@
 package com.gome.mobile.frame.router;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -344,6 +345,43 @@ public class GRouter {
         navigation(fragment, new Postcard(path), -1);
     }
 
+    void navigation(Context application, Postcard postcard) {
+        if (application == null) {
+            throw new RuntimeException("application is null");
+        }
+        if (null == postcard) {
+            throw new RuntimeException(TAG + " :: No postcard!");
+        }
+        Class targetClass = getActivityClass(postcard.getPath());
+        NavigationCallback callback = postcard.getCallback();
+        if (targetClass == null) {
+            if (callback != null) {
+                callback.onLost(postcard);
+            }
+            Log.e(TAG, "target Activity: "+ postcard.getPath() +"  not found");
+            return;
+        } else {
+            if (callback != null) {
+                callback.onFound(postcard);
+            }
+        }
+        Intent intent = new Intent(application, targetClass);
+        Bundle bundle = postcard.getBundle();
+        if (bundle != null) {
+            intent.putExtras(postcard.getBundle());
+        }
+        int flags = postcard.getFlags();
+        if (flags != Integer.MAX_VALUE) {
+            intent.addFlags(postcard.getFlags());
+        }
+        application.startActivity(intent);
+        if (callback != null) {
+            callback.onArrival(postcard);
+        }
+    }
 
+    public void navigation(Application application, String path) {
+        navigation(application, new Postcard(path));
+    }
 
 }

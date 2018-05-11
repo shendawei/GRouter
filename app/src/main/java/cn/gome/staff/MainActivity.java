@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.gome.mobile.frame.router.GRouter;
+import com.gome.mobile.frame.router.Postcard;
+import com.gome.mobile.frame.router.intf.NavigationCallback;
 import com.tech.integer.testkt.TestActivity;
 
 
@@ -56,7 +58,29 @@ public class MainActivity extends Activity {
         findViewById(R.id.router_fragment).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment = (Fragment) GRouter.getInstance().navigationFragment("/demo/test3_fragment");
+//                Fragment fragment = (Fragment) GRouter.getInstance().navigationFragment("/demo/test3_fragment");
+                Fragment fragment = (Fragment) GRouter.getInstance().navigationFragment("/demo/test3_fragment", null, new NavigationCallback(){
+
+                    @Override
+                    public void onFound(Postcard postcard) {
+
+                    }
+
+                    @Override
+                    public void onLost(Postcard postcard) {
+
+                    }
+
+                    @Override
+                    public void onArrival(Postcard postcard) {
+
+                    }
+
+                    @Override
+                    public void onInterrupt(Postcard postcard) {
+
+                    }
+                });
                 Toast.makeText(MainActivity.this, "fragment Instance class: " + fragment.getClass().getName(), Toast.LENGTH_LONG).show();
             }
         });
@@ -68,6 +92,32 @@ public class MainActivity extends Activity {
                         .build("/demo/webview")
                         .withString("url", "file:///android_asset/schame-test.html")
                         .navigation(MainActivity.this);
+
+                GRouter.getInstance()
+                        .build("/demo/webview")
+                        .withString("url", "file:///android_asset/schame-test.html")
+                        .withCallback(new NavigationCallback() {
+                            @Override
+                            public void onFound(Postcard postcard) {
+
+                            }
+
+                            @Override
+                            public void onLost(Postcard postcard) {
+
+                            }
+
+                            @Override
+                            public void onArrival(Postcard postcard) {
+
+                            }
+
+                            @Override
+                            public void onInterrupt(Postcard postcard) {
+
+                            }
+                        })
+                        .navigation(MainActivity.this);
             }
         });
 
@@ -75,6 +125,28 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 GRouter.getInstance().navigation(MainActivity.this, "/test/ktx");
+
+                GRouter.getInstance().navigationService("demo/service", new NavigationCallback() {
+                    @Override
+                    public void onFound(Postcard postcard) {
+
+                    }
+
+                    @Override
+                    public void onLost(Postcard postcard) {
+
+                    }
+
+                    @Override
+                    public void onArrival(Postcard postcard) {
+
+                    }
+
+                    @Override
+                    public void onInterrupt(Postcard postcard) {
+
+                    }
+                });
             }
         });
 

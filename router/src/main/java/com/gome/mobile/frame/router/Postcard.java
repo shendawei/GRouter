@@ -9,8 +9,10 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.SparseArray;
 
+import com.gome.mobile.frame.router.adapter.ParametersPraserAdapter;
 import com.gome.mobile.frame.router.intf.NavigationCallback;
 import com.gome.mobile.frame.router.utils.JSONUtil;
 
@@ -117,6 +119,19 @@ public class Postcard {
 
     public int getFlags() {
         return mFlags;
+    }
+
+    public Postcard withParameterPraser(ParametersPraserAdapter adapter) {
+        if (TextUtils.isEmpty(mPath)) {
+            throw new IllegalStateException("you should call withParameterPraser after had a mPath");
+        }
+        if (adapter != null) {
+            Bundle bundle = adapter.praser(mPath);
+            mPath = adapter.getUrl(mPath);
+            with(bundle);
+        }
+
+        return this;
     }
 
     public Postcard withObject(@Nullable String key, @Nullable Object value) {
