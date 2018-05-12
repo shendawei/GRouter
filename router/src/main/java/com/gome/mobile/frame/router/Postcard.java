@@ -1,6 +1,7 @@
 package com.gome.mobile.frame.router;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -77,6 +78,10 @@ public class Postcard {
 
     public void navigation(Fragment fragment, int requestCode) {
         GRouter.getInstance().navigation(fragment, this, requestCode);
+    }
+
+    public void navigation(Application application) {
+        GRouter.getInstance().navigation(application, this);
     }
 
     /**

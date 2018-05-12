@@ -32,11 +32,10 @@ public class GRouter {
     private static final String TAG = GRouter.class.getName();
     private static final GRouter router = new GRouter();
 
-    private GRouter() {
-    }
+    private GRouter() {}
 
     /**
-     * 获取单例
+     * 获取IRouter单例
      *
      * @return
      */
@@ -61,26 +60,21 @@ public class GRouter {
      * @param className
      */
     private static void register(Class className){
-        if (registerClass(className, IFragment.class)) {
+        if (registerIActivity(className)) {
             return;
         }
-        if (registerClass(className, IService.class)) {
+        if (registerIFragment(className)) {
             return;
         }
-        if (registerClass(className, IActivity.class)) {
+        if (registerIService(className)) {
             return;
         }
-        registerClass(className, IRouter.class);
-
+        registerIRouter(className);
     }
 
-    private static boolean registerClass(Class className, Class annotationType){
-        Annotation anno = className.getAnnotation(annotationType);
-        if (anno == null || annotationType == null) {
-            return false;
-        }
-        String annotationTypeName = annotationType.getName();
-        if (annotationTypeName.equals(IRouter.class.getName())) {
+    private static boolean registerIRouter(Class className) {
+        Annotation anno = className.getAnnotation(IRouter.class);
+        if (checkAnnotationNotNull(anno)) {
             IRouter router = (IRouter) anno;
             String key = router.value();
             if (mClassMap.containsKey(key)) {
@@ -88,7 +82,27 @@ public class GRouter {
             }
             mClassMap.put(key, className);
             return true;
-        } else if (annotationTypeName.equals(IService.class.getName())) {
+        }
+        return false;
+    }
+
+    private static boolean registerIFragment(Class className) {
+        Annotation anno = className.getAnnotation(IFragment.class);
+        if (checkAnnotationNotNull(anno)) {
+            IFragment fragment = (IFragment) anno;
+            String key = fragment.value();
+            if (mFragmentClassMap.containsKey(key)) {
+                throw new RuntimeException("GRouter contains same path->" + key);
+            }
+            mFragmentClassMap.put(key, className);
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean registerIService(Class className) {
+        Annotation anno = className.getAnnotation(IService.class);
+        if (checkAnnotationNotNull(anno)) {
             IService service = (IService) anno;
             String key = service.value();
             if (mServiceClassMap.containsKey(key)) {
@@ -96,7 +110,13 @@ public class GRouter {
             }
             mServiceClassMap.put(key, className);
             return true;
-        } else if (annotationTypeName.equals(IActivity.class.getName())) {
+        }
+        return false;
+    }
+
+    private static boolean registerIActivity(Class className) {
+        Annotation anno = className.getAnnotation(IActivity.class);
+        if (checkAnnotationNotNull(anno)) {
             IActivity activity = (IActivity) anno;
             String innerKey = activity.value();
             String htmlKey = activity.html();
@@ -111,16 +131,15 @@ public class GRouter {
                 mActivityClassMap.put(htmlKey, className);
             }
             return true;
-        } else if (annotationTypeName.equals(IFragment.class.getName())) {
-            IFragment fragment = (IFragment) anno;
-            String key = fragment.value();
-            if (mFragmentClassMap.containsKey(key)) {
-                throw new RuntimeException("GRouter contains same path->" + key);
-            }
-            mFragmentClassMap.put(key, className);
-            return true;
         }
         return false;
+    }
+
+    private static boolean checkAnnotationNotNull(Annotation anno) {
+        if (anno == null) {
+            return false;
+        }
+        return true;
     }
 
     /**
