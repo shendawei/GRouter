@@ -1,7 +1,6 @@
 ext {
     groupId = "com.gome.mcp"
-//    version = getProperty("AAR_MVP_VERSION")
-    version = "2.3.0-v7"
+    version = getProperty("AAR_ROUTER_VERSION")
     artifactId = "router"
     packaging = "aar"
 }

@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import com.gome.mobile.frame.router.annotation.IActivity;
 import com.gome.mobile.frame.router.annotation.IFragment;
@@ -171,7 +172,6 @@ public class GRouter {
         return targetClass;
     }
 
-
     /**
      * 获取 fragment实例
      * @param path
@@ -209,15 +209,6 @@ public class GRouter {
         return null;
     }
 
-    public Fragment navigationFragment(String path, Bundle bundle) {
-        return navigationFragment(path, bundle, null);
-    }
-
-    public Fragment navigationFragment(String path) {
-        return navigationFragment(path, null);
-    }
-
-
     public Object navigationService(String path, NavigationCallback callback) {
         Class serviceClass = getServiceClass(path);
         if (serviceClass == null) {
@@ -242,40 +233,6 @@ public class GRouter {
             callback.onArrival(new Postcard(path));
         }
         return null;
-    }
-
-    public Object navigationService(String path) {
-        return navigationService(path, null);
-    }
-
-
-    public Postcard build(String path) {
-        if (TextUtils.isEmpty(path)) {
-            throw new IllegalArgumentException("Parameter is invalid! path = " + path);
-        } else {
-            return new Postcard(path);
-        }
-    }
-
-    public Postcard build(Uri uri) {
-        if (uri == null || !(uri instanceof Uri) || TextUtils.isEmpty(uri.toString())) {
-            throw new IllegalArgumentException("Parameter is invalid! uri = " + uri);
-        } else {
-            Set<String> argsName = uri.getQueryParameterNames();
-            Bundle bundle = null;
-            if (!TextUtils.isEmpty(uri.getQuery())) {
-                bundle = new Bundle();
-                for (String key : argsName) {
-                    String value = uri.getQueryParameter(key);
-                    bundle.putString(key, value);
-                }
-            }
-            Postcard postcard = new Postcard(uri.getPath());
-            if (bundle != null) {
-                postcard.with(bundle);
-            }
-            return postcard;
-        }
     }
 
     void navigation(Activity activity, Postcard postcard, int requestCode) {
@@ -313,14 +270,6 @@ public class GRouter {
         }
     }
 
-    public void navigation(Activity activity, String path, int requestCode) {
-        navigation(activity, new Postcard(path), requestCode);
-    }
-
-    public void navigation(Activity activity, String path) {
-        navigation(activity, new Postcard(path), -1);
-    }
-
     void navigation(Fragment fragment, Postcard postcard, int requestCode) {
         if (fragment == null) {
             throw new RuntimeException("Context is null");
@@ -356,17 +305,9 @@ public class GRouter {
         }
     }
 
-    public void navigation(Fragment fragment, String path, int requestCode) {
-        navigation(fragment, new Postcard(path), requestCode);
-    }
-
-    public void navigation(Fragment fragment, String path) {
-        navigation(fragment, new Postcard(path), -1);
-    }
-
-    void navigation(Context application, Postcard postcard) {
-        if (application == null) {
-            throw new RuntimeException("application is null");
+    void navigation(Context context, Postcard postcard) {
+        if (context == null) {
+            throw new RuntimeException("context is null");
         }
         if (null == postcard) {
             throw new RuntimeException(TAG + " :: No postcard!");
@@ -384,7 +325,7 @@ public class GRouter {
                 callback.onFound(postcard);
             }
         }
-        Intent intent = new Intent(application, targetClass);
+        Intent intent = new Intent(context, targetClass);
         Bundle bundle = postcard.getBundle();
         if (bundle != null) {
             intent.putExtras(postcard.getBundle());
@@ -393,14 +334,118 @@ public class GRouter {
         if (flags != Integer.MAX_VALUE) {
             intent.addFlags(postcard.getFlags());
         }
-        application.startActivity(intent);
+        context.startActivity(intent);
         if (callback != null) {
             callback.onArrival(postcard);
         }
     }
 
+    /**
+     * 创建跳转参数对象
+     * @param uri 跳转用的uri
+     * @return
+     */
+    public Postcard build(Uri uri) {
+        if (uri == null || !(uri instanceof Uri) || TextUtils.isEmpty(uri.toString())) {
+            throw new IllegalArgumentException("Parameter is invalid! uri = " + uri);
+        } else {
+            Set<String> argsName = uri.getQueryParameterNames();
+            Bundle bundle = null;
+            if (!TextUtils.isEmpty(uri.getQuery())) {
+                bundle = new Bundle();
+                for (String key : argsName) {
+                    String value = uri.getQueryParameter(key);
+                    bundle.putString(key, value);
+                }
+            }
+            Postcard postcard = new Postcard(uri.getPath());
+            if (bundle != null) {
+                postcard.with(bundle);
+            }
+            return postcard;
+        }
+    }
+
+    /**
+     * 创建跳转参数对象
+     * @param path 跳转用的uri
+     * @return
+     */
+    public Postcard build(String path) {
+        if (TextUtils.isEmpty(path)) {
+            throw new IllegalArgumentException("Parameter is invalid! path = " + path);
+        } else {
+            return new Postcard(path);
+        }
+    }
+
+    /**
+     * 创建Fragment实例
+     * @param path 已注册的Fragment地址
+     * @param bundle 需要传给Fragment的参数
+     * @return
+     */
+    public Fragment navigationFragment(String path, Bundle bundle) {
+        return navigationFragment(path, bundle, null);
+    }
+
+    public Fragment navigationFragment(String path) {
+        return navigationFragment(path, null);
+    }
+
+    /**
+     * 获取服务的实例
+     * @param path 服务实例地址
+     * @return
+     */
+    public Object navigationService(String path) {
+        return navigationService(path, null);
+    }
+
+    /**
+     * 从Activity跳转到Activity方法
+     * @param activity 调用跳转方法的Activity
+     * @param path 跳转目标的地址
+     * @param requestCode
+     */
+    public void navigation(Activity activity, String path, int requestCode) {
+        navigation(activity, new Postcard(path), requestCode);
+    }
+
+    public void navigation(Activity activity, String path) {
+        navigation(activity, new Postcard(path), -1);
+    }
+
+    /**
+     * 从Fragment跳转到Activity方法
+     * @param fragment 调用跳转方法的fragment
+     * @param path 跳转目标的地址
+     * @param requestCode
+     */
+    public void navigation(Fragment fragment, String path, int requestCode) {
+        navigation(fragment, new Postcard(path), requestCode);
+    }
+
+    public void navigation(Fragment fragment, String path) {
+        navigation(fragment, new Postcard(path), -1);
+    }
+
+    /**
+     * 从Application跳转到Activity方法
+     * @param application 调用跳转方法的application
+     * @param path 跳转目标的地址
+     */
     public void navigation(Application application, String path) {
         navigation(application, new Postcard(path));
+    }
+
+    /**
+     * 从View跳转到Activity方法
+     * @param view 调用跳转方法的view
+     * @param path 跳转目标的地址
+     */
+    public void navigation(View view, String path) {
+        navigation(view.getContext(), new Postcard(path));
     }
 
 }

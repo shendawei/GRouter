@@ -1,9 +1,10 @@
 ext {
     groupId = "com.gutils.router"
-    version = "2.3.0-v8"
+    version = "2.3.0-v9"
     artifactId = "router"
     packaging = "jar"
 }
+
 repositories {
     jcenter()
 }
