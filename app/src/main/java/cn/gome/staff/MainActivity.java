@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.gome.mobile.frame.router.GRouter;
 import com.gome.mobile.frame.router.Postcard;
+import com.gome.mobile.frame.router.adapter.ParametersPraserAdapter;
 import com.gome.mobile.frame.router.intf.NavigationCallback;
 import com.tech.integer.testkt.TestActivity;
 
@@ -150,6 +151,40 @@ public class MainActivity extends Activity {
             }
         });
 
+
+
+        GRouter.getInstance().build("https://item.m.gomeplus.com/10/53/p|1|2|1130542649.html?stid=A00F")
+                .withParameterPraser(new ParametersPraserAdapter() {
+                    @Override
+                    public Bundle praser(String url) {
+                        int start = url.lastIndexOf("/");
+                        String para = url.substring(start, url.length());
+                        Bundle bundle = new Bundle();
+                        bundle.putString("", "1130542649");
+                        bundle.putString("stid", "A00F");
+                        bundle.putString("url", "https://item.m.gomeplus.com/p.html?stid=A00F&sku=1130542649");
+
+
+                        return bundle;
+                    }
+
+                    @Override
+                    public String getUrl(String url) {
+
+                        return "p-";
+                    }
+                }).navigation(this);
+
+
+        GRouter.getInstance().build("https://item.m.gomeplus.com/p-1130542649.html?stid=A00F")
+                .withParameterPraser(new PPraser() {
+                    @Override
+                    public Bundle praser(String url) {
+
+                        return null;
+                    }
+
+                }).navigation(this);
         TestActivity temp;
 
     }

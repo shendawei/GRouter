@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.SparseArray;
+import android.view.View;
 
 import com.gome.mobile.frame.router.adapter.ParametersPraserAdapter;
 import com.gome.mobile.frame.router.intf.NavigationCallback;
@@ -82,6 +83,13 @@ public class Postcard {
 
     public void navigation(Application application) {
         GRouter.getInstance().navigation(application, this);
+    }
+
+    public void navigation(View view) {
+        if (view == null) {
+            return;
+        }
+        GRouter.getInstance().navigation(view.getContext(), this);
     }
 
     /**

@@ -1,3 +1,3 @@
-//include ':app', ':RouterTestLibrary'
+include ':app', ':RouterTestLibrary'
+include ":testkt"
 include ":router"
-//include ":testkt"

@@ -79,7 +79,7 @@ public class GRouter {
             IRouter router = (IRouter) anno;
             String key = router.value();
             if (mClassMap.containsKey(key)) {
-                throw new RuntimeException("GRouter contains same path->" + key);
+                return true;
             }
             mClassMap.put(key, className);
             return true;
@@ -93,7 +93,7 @@ public class GRouter {
             IFragment fragment = (IFragment) anno;
             String key = fragment.value();
             if (mFragmentClassMap.containsKey(key)) {
-                throw new RuntimeException("GRouter contains same path->" + key);
+                return true;
             }
             mFragmentClassMap.put(key, className);
             return true;
@@ -107,7 +107,7 @@ public class GRouter {
             IService service = (IService) anno;
             String key = service.value();
             if (mServiceClassMap.containsKey(key)) {
-                throw new RuntimeException("GRouter contains same path->" + key);
+                return true;
             }
             mServiceClassMap.put(key, className);
             return true;
@@ -122,12 +122,12 @@ public class GRouter {
             String innerKey = activity.value();
             String htmlKey = activity.html();
             if (innerKey != null && mActivityClassMap.containsKey(innerKey)) {
-                throw new RuntimeException("GRouter contains same path->" + innerKey);
+                return true;
             } else {
                 mActivityClassMap.put(innerKey, className);
             }
             if (mActivityClassMap.containsKey(htmlKey)) {
-                throw new RuntimeException("GRouter contains same path->" + htmlKey);
+                return true;
             } else if (htmlKey != null && htmlKey.length() > 0) {
                 mActivityClassMap.put(htmlKey, className);
             }
@@ -166,9 +166,6 @@ public class GRouter {
 
     private Class getActivityClass(String path) {
         Class targetClass = mActivityClassMap.get(path);
-        if (targetClass == null) {
-            throw new RuntimeException(String.format("activity for path:%s not found", path));
-        }
         return targetClass;
     }
 
@@ -373,7 +370,7 @@ public class GRouter {
      */
     public Postcard build(String path) {
         if (TextUtils.isEmpty(path)) {
-            throw new IllegalArgumentException("Parameter is invalid! path = " + path);
+            throw new IllegalArgumentException("Parameter is invalid! path empty");
         } else {
             return new Postcard(path);
         }
