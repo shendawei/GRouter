@@ -338,6 +338,30 @@ public class GRouter {
     }
 
     /**
+     * clazz是否存在
+     * @param clzName
+     * @return
+     */
+    public boolean exists(Class clzName) {
+        return mServiceClassMap.containsValue(clzName)
+                || mActivityClassMap.containsValue(clzName)
+                || mServiceClassMap.containsValue(clzName)
+                || mFragmentClassMap.containsValue(clzName);
+    }
+
+    /**
+     * 注册路径是否存在
+     * @param clzName
+     * @return
+     */
+    public boolean exists(String clzName) {
+        return mServiceClassMap.containsKey(clzName)
+                || mActivityClassMap.containsKey(clzName)
+                || mServiceClassMap.containsKey(clzName)
+                || mFragmentClassMap.containsKey(clzName);
+    }
+
+    /**
      * 创建跳转参数对象
      * @param uri 跳转用的uri
      * @return
