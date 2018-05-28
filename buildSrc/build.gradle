@@ -1,6 +1,6 @@
 ext {
     groupId = "com.gutils.router"
-    version = "2.3.0-v10"
+    version = "2.3.0-v12"
     artifactId = "router"
     packaging = "jar"
 }
