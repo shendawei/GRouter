@@ -8,7 +8,7 @@ import android.util.Log;
 
 import java.util.Set;
 
-public class SchemeFilterActivity extends Activity {
+class SchemeFilterActivity extends Activity {
 
     private static final String TAG = SchemeFilterActivity.class.getName();
     @Override
