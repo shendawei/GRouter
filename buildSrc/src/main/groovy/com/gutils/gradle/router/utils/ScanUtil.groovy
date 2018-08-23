@@ -69,7 +69,7 @@ class ScanUtil {
         }
         String currentEntryName = entryName.replaceAll("/", ".")
         for (String packageName in ScanSetting.TARGET_LIST) {
-            if (packageName != null && packageName.contains(currentEntryName)) {
+            if (packageName != null && currentEntryName.contains(packageName)) {
                 return true
             }
         }
