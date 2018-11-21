@@ -21,7 +21,9 @@
         <activity android:name=".activity.Test1Activity" />
         <activity android:name=".activity.Test2Activity" />
         <activity android:name=".activity.TestWebviewActivity" />
-        <activity android:name=".activity.TestFromWebActivity"></activity>
+        <activity android:name=".activity.TestFromWebActivity" />
+        <activity android:name=".activity.TestFragmentActivity1Activity" />
+        <activity android:name=".activity.TestFragmentActivity2Activity"></activity>
     </application>
 
 </manifest>

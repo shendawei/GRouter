@@ -8,7 +8,7 @@ import com.gome.mobile.frame.router.annotation.IRouter;
 
 import cn.gome.staff.R;
 
-@IActivity(value = "abc", html = "/demo/inde.html")
+@IActivity(value = "abc", html = "/demo/inde.html", schemes = {"12313", "3213", "sdff"})
 public class Main2Activity extends Activity {
 
     @Override

@@ -14,6 +14,8 @@ import com.gome.mobile.frame.router.adapter.ParametersPraserAdapter;
 import com.gome.mobile.frame.router.intf.NavigationCallback;
 import com.tech.integer.testkt.TestActivity;
 
+import cn.gome.staff.activity.TestFragmentActivity1Activity;
+
 
 public class MainActivity extends Activity {
 
@@ -152,6 +154,20 @@ public class MainActivity extends Activity {
         });
 
 
+        /**
+         * GRouter中
+         * 从fragment使用startActivityForResult跳转到Activity,在使用setResult后要使fragment的onActivityResult方法收到回调，必须有：
+         * 重写fragment的宿主activity的onActivityResult方法，并在方法内调用super.onActivityResult
+         */
+        findViewById(R.id.router_fragmentactivity).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, TestFragmentActivity1Activity.class);
+                startActivity(intent);
+            }
+        });
+
+
 
         GRouter.getInstance().build("https://item.m.gomeplus.com/10/53/p|1|2|1130542649.html?stid=A00F")
                 .withParameterPraser(new ParametersPraserAdapter() {
@@ -185,7 +201,10 @@ public class MainActivity extends Activity {
                     }
 
                 }).navigation(this);
-        TestActivity temp;
+
+
 
     }
+
+
 }
