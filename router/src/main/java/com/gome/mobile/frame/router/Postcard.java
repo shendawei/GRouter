@@ -2,6 +2,7 @@ package com.gome.mobile.frame.router;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -16,6 +17,7 @@ import android.view.View;
 
 import com.gome.mobile.frame.router.adapter.ParametersPraserAdapter;
 import com.gome.mobile.frame.router.intf.NavigationCallback;
+import com.gome.mobile.frame.router.intf.RequestCallback;
 import com.gome.mobile.frame.router.utils.JSONUtil;
 
 import java.io.Serializable;
@@ -31,7 +33,7 @@ import java.util.ArrayList;
  */
 public class Postcard {
 
-
+    private RequestMethod mMethod;
     private String mPath;
     private Bundle mBundle;
     /**
@@ -46,6 +48,7 @@ public class Postcard {
     public Postcard(String path) {
         this.mPath = path;
         this.mBundle = new Bundle();
+        this.mMethod = RequestMethod.Get;
     }
 
     public String getPath() {
@@ -54,6 +57,10 @@ public class Postcard {
 
     public Bundle getBundle() {
         return mBundle;
+    }
+
+    public RequestMethod getMethod() {
+        return mMethod;
     }
 
     public NavigationCallback getCallback() {
@@ -90,6 +97,22 @@ public class Postcard {
             return;
         }
         GRouter.getInstance().navigation(view.getContext(), this);
+    }
+
+    public Object navigationRequest(Context context, RequestCallback callback) {
+        return GRouter.getInstance().navigationRequest(context, callback, this);
+    }
+
+    public Object navigationRequest(Application application, RequestCallback callback) {
+        return navigationRequest(application.getApplicationContext(), callback);
+    }
+
+    public Object navigationRequest(Fragment fragment, RequestCallback callback) {
+        return navigationRequest(fragment.getContext(), callback);
+    }
+
+    public Object navigationRequest(View view, RequestCallback callback) {
+        return navigationRequest(view.getContext(), callback);
     }
 
     /**
@@ -286,5 +309,8 @@ public class Postcard {
         return this;
     }
 
-
+    public Postcard withMethod(RequestMethod method) {
+        this.mMethod = method;
+        return this;
+    }
 }

@@ -6,20 +6,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
 import com.gome.mobile.frame.router.annotation.IActivity;
 import com.gome.mobile.frame.router.annotation.IFragment;
+import com.gome.mobile.frame.router.annotation.IRoute;
 import com.gome.mobile.frame.router.annotation.IRouter;
 import com.gome.mobile.frame.router.annotation.IService;
 import com.gome.mobile.frame.router.intf.NavigationCallback;
+import com.gome.mobile.frame.router.intf.RequestCallback;
+import com.gome.mobile.frame.router.intf.Result;
+import com.gome.mobile.frame.router.utils.ReflectUtil;
 
 import java.lang.annotation.Annotation;
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -32,8 +41,13 @@ public class GRouter {
 
     private static final String TAG = GRouter.class.getName();
     private static final GRouter router = new GRouter();
+    private static final ServiceManager mServiceManager = new ServiceManager();
 
-    private GRouter() {}
+    private @Nullable
+    WeakReference<Context> mContext = null;
+
+    private GRouter() {
+    }
 
     /**
      * 获取IRouter单例
@@ -44,7 +58,7 @@ public class GRouter {
         return router;
     }
 
-    private static HashMap<String, Class> mClassMap = new HashMap<String, Class>();
+    private static HashMap<String, Class> mClassMap = new HashMap<>();
     private static HashMap<String, Class> mServiceClassMap = new HashMap<>();
     private static HashMap<String, Class> mFragmentClassMap = new HashMap<>();
     private static HashMap<String, Class> mActivityClassMap = new HashMap<>();
@@ -55,12 +69,22 @@ public class GRouter {
     public void init() {
     }
 
+    private void setContext(Context context) {
+        if (context != null) {
+            mContext = new WeakReference<>(context);
+        }
+    }
+
+    private Context getContext() {
+        return mContext != null ? mContext.get() : null;
+    }
+
     /**
      * 注册class
      *
      * @param className
      */
-    private static void register(Class className){
+    private static void register(Class className) {
         if (registerIActivity(className)) {
             return;
         }
@@ -110,6 +134,8 @@ public class GRouter {
                 return true;
             }
             mServiceClassMap.put(key, className);
+            mServiceManager.onRegister(key, className);
+
             return true;
         }
         return false;
@@ -171,6 +197,7 @@ public class GRouter {
 
     /**
      * 获取 fragment实例
+     *
      * @param path
      * @param bundle
      * @return
@@ -191,7 +218,7 @@ public class GRouter {
         try {
             Object instance = fragmentClass.getConstructor().newInstance();
             if (instance instanceof Fragment && bundle != null) {
-                ((Fragment)instance).setArguments(bundle);
+                ((Fragment) instance).setArguments(bundle);
             }
             return (Fragment) instance;
         } catch (Exception ex) {
@@ -239,13 +266,16 @@ public class GRouter {
         if (null == postcard) {
             throw new RuntimeException(TAG + " :: No postcard!");
         }
+
+        setContext(activity);
+
         Class targetClass = getActivityClass(postcard.getPath());
         NavigationCallback callback = postcard.getCallback();
         if (targetClass == null) {
             if (callback != null) {
                 callback.onLost(postcard);
             }
-            Log.e(TAG, "target Activity: "+ postcard.getPath() +"  not found");
+            Log.e(TAG, "target Activity: " + postcard.getPath() + "  not found");
             return;
         } else {
             if (callback != null) {
@@ -274,13 +304,16 @@ public class GRouter {
         if (null == postcard) {
             throw new RuntimeException(TAG + " :: No postcard!");
         }
+
+        setContext(fragment.getContext());
+
         Class targetClass = getActivityClass(postcard.getPath());
         NavigationCallback callback = postcard.getCallback();
         if (targetClass == null) {
             if (callback != null) {
                 callback.onLost(postcard);
             }
-            Log.e(TAG, "target Activity: "+ postcard.getPath() +"  not found");
+            Log.e(TAG, "target Activity: " + postcard.getPath() + "  not found");
             return;
         } else {
             if (callback != null) {
@@ -309,13 +342,16 @@ public class GRouter {
         if (null == postcard) {
             throw new RuntimeException(TAG + " :: No postcard!");
         }
+
+        setContext(context);
+
         Class targetClass = getActivityClass(postcard.getPath());
         NavigationCallback callback = postcard.getCallback();
         if (targetClass == null) {
             if (callback != null) {
                 callback.onLost(postcard);
             }
-            Log.e(TAG, "target Activity: "+ postcard.getPath() +"  not found");
+            Log.e(TAG, "target Activity: " + postcard.getPath() + "  not found");
             return;
         } else {
             if (callback != null) {
@@ -337,8 +373,24 @@ public class GRouter {
         }
     }
 
+    private static Uri buildUri(String path, RequestMethod method) {
+        return new Uri.Builder()
+                .path(path)
+                .appendQueryParameter("method", method.toString())
+                .build();
+    }
+
+    Object navigationRequest(Context context, RequestCallback callback, Postcard postcard) {
+        setContext(context);
+
+        Uri uri = buildUri(postcard.getPath(), postcard.getMethod());
+
+        return mServiceManager.onRequest(uri, postcard.getBundle(), callback);
+    }
+
     /**
      * clazz是否存在
+     *
      * @param clzName
      * @return
      */
@@ -351,6 +403,7 @@ public class GRouter {
 
     /**
      * 注册路径是否存在
+     *
      * @param clzName
      * @return
      */
@@ -363,6 +416,7 @@ public class GRouter {
 
     /**
      * 创建跳转参数对象
+     *
      * @param uri 跳转用的uri
      * @return
      */
@@ -389,6 +443,7 @@ public class GRouter {
 
     /**
      * 创建跳转参数对象
+     *
      * @param path 跳转用的uri
      * @return
      */
@@ -402,7 +457,8 @@ public class GRouter {
 
     /**
      * 创建Fragment实例
-     * @param path 已注册的Fragment地址
+     *
+     * @param path   已注册的Fragment地址
      * @param bundle 需要传给Fragment的参数
      * @return
      */
@@ -416,6 +472,7 @@ public class GRouter {
 
     /**
      * 获取服务的实例
+     *
      * @param path 服务实例地址
      * @return
      */
@@ -425,8 +482,9 @@ public class GRouter {
 
     /**
      * 从Activity跳转到Activity方法
-     * @param activity 调用跳转方法的Activity
-     * @param path 跳转目标的地址
+     *
+     * @param activity    调用跳转方法的Activity
+     * @param path        跳转目标的地址
      * @param requestCode
      */
     public void navigation(Activity activity, String path, int requestCode) {
@@ -439,8 +497,9 @@ public class GRouter {
 
     /**
      * 从Fragment跳转到Activity方法
-     * @param fragment 调用跳转方法的fragment
-     * @param path 跳转目标的地址
+     *
+     * @param fragment    调用跳转方法的fragment
+     * @param path        跳转目标的地址
      * @param requestCode
      */
     public void navigation(Fragment fragment, String path, int requestCode) {
@@ -453,8 +512,9 @@ public class GRouter {
 
     /**
      * 从Application跳转到Activity方法
+     *
      * @param application 调用跳转方法的application
-     * @param path 跳转目标的地址
+     * @param path        跳转目标的地址
      */
     public void navigation(Application application, String path) {
         navigation(application, new Postcard(path));
@@ -462,11 +522,182 @@ public class GRouter {
 
     /**
      * 从View跳转到Activity方法
+     *
      * @param view 调用跳转方法的view
      * @param path 跳转目标的地址
      */
     public void navigation(View view, String path) {
         navigation(view.getContext(), new Postcard(path));
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mServiceManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private static class ServiceHolder {
+        final int id;
+        final RouteService service;
+        final Result result;
+
+        ServiceHolder(int id, RouteService service, Result result) {
+            this.id = id;
+            this.service = service;
+            this.result = result;
+        }
+    }
+
+    private static class ServiceManager implements ActivityProxy {
+        private static final int MAX_REQUEST_CODE = 0x00FF;
+        private static final int MAX_SERIAL_NUMBER = 0x00FF;
+        private static final int SERVICE_ID_MASK = 0xFF00;
+        private static final int SERVICE_ID_SHIFT = 8;
+
+        private int lastSerialNumber = 0;
+        private List<ServiceHolder> pendingServices = new LinkedList<>();
+        private Map<Uri, RequestHandler> handlers = new HashMap<>();
+
+        private int generateServiceId() {
+            return (lastSerialNumber = lastSerialNumber % MAX_SERIAL_NUMBER + 1) << SERVICE_ID_SHIFT;
+        }
+
+        void onRegister(String serviceUri, Class<?> serviceType) {
+            Set<Class<?>> interfaces = ReflectUtil.getInheritedInterfaces(serviceType);
+            if (!interfaces.contains(RouteService.class)) {
+                return;
+            }
+
+            for (Class<?> anInterface : interfaces) {
+                Set<Method> methods = ReflectUtil.findDeclaredMethodsByAnnotation(anInterface, IRoute.class);
+                for (Method method : methods) {
+                    IRoute route = method.getAnnotation(IRoute.class);
+                    Uri uri = buildUri(route.uri(), route.method());
+
+                    handlers.put(uri, new RequestHandler(serviceUri, method));
+                }
+            }
+        }
+
+        Object onRequest(Uri path, Bundle params, RequestCallback callback) {
+            RequestHandler handler = handlers.get(path);
+            if (handler == null) {
+                return null;
+            }
+
+            Object serviceObj = router.navigationService(handler.getServiceUri());
+            if (!(serviceObj instanceof RouteService)) {
+                return null;
+            }
+
+            RouteService service = (RouteService) serviceObj;
+            service.setActivityProxy(this);
+
+            int serviceId = generateServiceId();
+            Result result = new ResultImpl(serviceId, callback);
+
+            pendingServices.add(new ServiceHolder(generateServiceId(), service, result));
+
+            return handler.handle(service, params, result);
+        }
+
+        private ServiceHolder getServiceId(Object service) {
+            for (ServiceHolder holder : pendingServices) {
+                if (holder.service == service) {
+                    return holder;
+                }
+            }
+
+            return null;
+        }
+
+        private ServiceHolder getService(int serviceId) {
+            for (ServiceHolder holder : pendingServices) {
+                if (holder.id == serviceId) {
+                    return holder;
+                }
+            }
+
+            return null;
+        }
+
+        private ServiceHolder removeService(int serviceId) {
+            ServiceHolder holder = getService(serviceId);
+            if (holder != null) {
+                pendingServices.remove(holder);
+            }
+
+            return holder;
+        }
+
+        @Override
+        public Context getContext() {
+            return router.getContext();
+        }
+
+        @Override
+        public void startActivity(RouteService service, Intent intent) {
+            Context context = getContext();
+            if (context != null) {
+                context.startActivity(intent);
+            }
+        }
+
+        @Override
+        public void startActivityForResult(RouteService service, Intent intent, int requestCode, Result result) {
+            Context context = getContext();
+            if (!(context instanceof Activity)) {
+                return;
+            }
+
+            if (requestCode < 1 || requestCode > MAX_REQUEST_CODE) {
+                throw new RuntimeException("requestCode must between 1 and " + MAX_REQUEST_CODE);
+            }
+
+            ServiceHolder holder = getServiceId(service);
+            if (holder != null) {
+                ((Activity) context).startActivityForResult(intent, requestCode + holder.id);
+            }
+        }
+
+        void onActivityResult(int requestCode, int resultCode, Intent data) {
+            int serviceId = requestCode & SERVICE_ID_MASK;
+            requestCode -= serviceId;
+
+            ServiceHolder holder = getService(serviceId);
+            if (holder != null) {
+                holder.service.onActivityResult(requestCode, resultCode, data, holder.result);
+            }
+        }
+
+        private class ResultImpl implements Result {
+            private final int serviceId;
+            private final RequestCallback callback;
+
+            private ResultImpl(int serviceId, RequestCallback callback) {
+                this.serviceId = serviceId;
+                this.callback = callback;
+            }
+
+            @Override
+            public void success(Object obj) {
+                if (callback != null) {
+                    callback.onSuccess(obj);
+                }
+                removeService(serviceId);
+            }
+
+            @Override
+            public void error(String errorCode, String errorMessage, Throwable cause) {
+                if (callback != null) {
+                    callback.onError(errorCode, errorMessage, cause);
+                }
+                removeService(serviceId);
+            }
+
+            @Override
+            public void error(String errorMessage, Throwable cause) {
+                error(null, errorMessage, cause);
+            }
+        }
     }
 
 }

@@ -10,9 +10,10 @@ import android.widget.Toast;
 
 import com.gome.mobile.frame.router.GRouter;
 import com.gome.mobile.frame.router.Postcard;
+import com.gome.mobile.frame.router.RequestMethod;
 import com.gome.mobile.frame.router.adapter.ParametersPraserAdapter;
 import com.gome.mobile.frame.router.intf.NavigationCallback;
-import com.tech.integer.testkt.TestActivity;
+import com.gome.mobile.frame.router.intf.RequestCallback;
 
 import cn.gome.staff.activity.TestFragmentActivity1Activity;
 
@@ -27,6 +28,39 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         TestDemo1 demo1 = new TestDemo1();
+
+        // 同步请求
+        findViewById(R.id.router_request).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String text = (String) GRouter.getInstance()
+                        .build("/demo/getSync")
+                        .withMethod(RequestMethod.Get)
+                        .navigationRequest(MainActivity.this, null);
+                Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // 异步请求
+        findViewById(R.id.router_request_async).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GRouter.getInstance()
+                        .build("/demo/getAsync")
+                        .withMethod(RequestMethod.Get)
+                        .navigationRequest(MainActivity.this, new RequestCallback() {
+                            @Override
+                            public void onSuccess(Object value) {
+                                Toast.makeText(MainActivity.this, value.toString(), Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onError(String errorCode, String errorMessage, Throwable cause) {
+
+                            }
+                        });
+            }
+        });
 
         // 标准跳转
         findViewById(R.id.router_normal).setOnClickListener(new View.OnClickListener() {
@@ -202,9 +236,10 @@ public class MainActivity extends Activity {
 
                 }).navigation(this);
 
-
-
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        GRouter.getInstance().onActivityResult(requestCode, resultCode, data);
+    }
 }
