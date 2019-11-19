@@ -6,12 +6,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Toast;
 
 import com.gome.mobile.frame.router.GRouter;
 import com.gome.mobile.frame.router.Postcard;
 import com.gome.mobile.frame.router.RequestMethod;
+import com.gome.mobile.frame.router.ThreadMode;
 import com.gome.mobile.frame.router.adapter.ParametersPraserAdapter;
+import com.gome.mobile.frame.router.annotation.RouteEvent;
 import com.gome.mobile.frame.router.intf.NavigationCallback;
 import com.gome.mobile.frame.router.intf.RequestCallback;
 
@@ -22,12 +25,27 @@ public class MainActivity extends Activity {
 
     private static final String TAG = MainActivity.class.getName();
 
+    @RouteEvent(uri = "/demo/event", threadMode = ThreadMode.Background)
+    public void onEvent(Bundle params) {
+        Toast.makeText(MainActivity.this, params.getString("text"), Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         TestDemo1 demo1 = new TestDemo1();
+
+        findViewById(R.id.router_broadcast).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GRouter.getInstance()
+                        .build("/demo/event")
+                        .withString("text", "A string from event")
+                        .broadcast();
+            }
+        });
 
         // 同步请求
         findViewById(R.id.router_request).setOnClickListener(new View.OnClickListener() {
@@ -36,7 +54,7 @@ public class MainActivity extends Activity {
                 String text = (String) GRouter.getInstance()
                         .build("/demo/getSync")
                         .withMethod(RequestMethod.Get)
-                        .navigationRequest(MainActivity.this, null);
+                        .request(MainActivity.this, null);
                 Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
             }
         });
@@ -48,7 +66,7 @@ public class MainActivity extends Activity {
                 GRouter.getInstance()
                         .build("/demo/getAsync")
                         .withMethod(RequestMethod.Get)
-                        .navigationRequest(MainActivity.this, new RequestCallback() {
+                        .request(MainActivity.this, new RequestCallback() {
                             @Override
                             public void onSuccess(Object value) {
                                 Toast.makeText(MainActivity.this, value.toString(), Toast.LENGTH_SHORT).show();
@@ -241,5 +259,17 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         GRouter.getInstance().onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        GRouter.getInstance().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        GRouter.getInstance().unregister(this);
     }
 }

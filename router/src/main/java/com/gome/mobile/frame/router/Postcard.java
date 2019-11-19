@@ -99,20 +99,24 @@ public class Postcard {
         GRouter.getInstance().navigation(view.getContext(), this);
     }
 
-    public Object navigationRequest(Context context, RequestCallback callback) {
+    public Object request(Context context, RequestCallback callback) {
         return GRouter.getInstance().navigationRequest(context, callback, this);
     }
 
-    public Object navigationRequest(Application application, RequestCallback callback) {
-        return navigationRequest(application.getApplicationContext(), callback);
+    public Object request(Application application, RequestCallback callback) {
+        return request(application.getApplicationContext(), callback);
     }
 
-    public Object navigationRequest(Fragment fragment, RequestCallback callback) {
-        return navigationRequest(fragment.getContext(), callback);
+    public Object request(Fragment fragment, RequestCallback callback) {
+        return request(fragment.getContext(), callback);
     }
 
-    public Object navigationRequest(View view, RequestCallback callback) {
-        return navigationRequest(view.getContext(), callback);
+    public Object request(View view, RequestCallback callback) {
+        return request(view.getContext(), callback);
+    }
+
+    public void broadcast() {
+        GRouter.getInstance().broadcast(mPath, mBundle);
     }
 
     /**

@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import cn.gome.mobile.frame.GThreadPool;
+
 /**
  * Gome IRouter
  *
@@ -42,11 +44,13 @@ public class GRouter {
     private static final String TAG = GRouter.class.getName();
     private static final GRouter router = new GRouter();
     private static final ServiceManager mServiceManager = new ServiceManager();
+    private static final EventManager mEventManager = new EventManager();
 
     private @Nullable
     WeakReference<Context> mContext = null;
 
     private GRouter() {
+        GThreadPool.init();
     }
 
     /**
@@ -532,6 +536,18 @@ public class GRouter {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         mServiceManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void register(Object receiver) {
+        mEventManager.register(receiver);
+    }
+
+    public void unregister(Object receiver) {
+        mEventManager.unregister(receiver);
+    }
+
+    public void broadcast(String uri, Bundle params) {
+        mEventManager.onEvent(uri, params);
     }
 
     private static class ServiceHolder {
