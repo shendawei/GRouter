@@ -1,81 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/router_broadcast"
-        android:layout_width="192dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="发送事件"
-        android:layout_marginTop="24dp" />
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/router_request"
-        android:layout_width="192dp"
-        android:layout_height="wrap_content"
-        android:text="同步请求"
-        android:layout_marginTop="24dp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp">
 
-    <Button
-        android:id="@+id/router_request_async"
-        android:layout_width="192dp"
-        android:layout_height="wrap_content"
-        android:text="异步请求"
-        android:layout_marginTop="24dp" />
+            <com.gome.mobile.frame.router.RouteView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:routeUri="/demo/getView" />
 
-    <Button
-        android:id="@+id/router_normal"
-        android:layout_width="192dp"
-        android:layout_height="wrap_content"
-        android:text="一般跳转"
-        android:layout_marginTop="24dp"/>
+            <com.gome.mobile.frame.router.RouteView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:routeUri="/demo/getView2" />
 
-    <Button
-        android:id="@+id/router_grouter"
-        android:layout_width="192dp"
-        android:layout_height="wrap_content"
-        android:text="标准Router跳转"
-        android:layout_marginTop="24dp"/>
-
-    <Button
-        android:id="@+id/router_grouter_with_params"
-        android:layout_width="192dp"
-        android:layout_height="wrap_content"
-        android:text="标准Router跳转传参"
-        android:layout_marginTop="24dp"/>
-
-    <Button
-        android:id="@+id/router_fragment"
-        android:layout_width="192dp"
-        android:layout_height="wrap_content"
-        android:text="获取Fragment实例"
-        android:layout_marginTop="24dp"/>
-
-    <Button
-        android:id="@+id/router_webview"
-        android:layout_width="192dp"
-        android:layout_height="wrap_content"
-        android:text="跳转到WebView"
-        android:layout_marginTop="24dp"/>
-
-    <Button
-        android:id="@+id/router_interface"
-        android:layout_width="192dp"
-        android:layout_height="wrap_content"
-        android:text="接口跳转"
-        android:layout_marginTop="24dp"/>
-
-    <Button
-        android:id="@+id/router_fragmentactivity"
-        android:layout_width="192dp"
-        android:layout_height="wrap_content"
-        android:text="跳转到FragmentActivity"
-        android:layout_marginTop="24dp"/>
+        </LinearLayout>
 
 
-</LinearLayout>
+        <Button
+            android:id="@+id/router_broadcast"
+            android:layout_width="192dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="发送事件" />
+
+        <Button
+            android:id="@+id/router_request"
+            android:layout_width="192dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="同步请求" />
+
+        <Button
+            android:id="@+id/router_request_async"
+            android:layout_width="192dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="异步请求" />
+
+        <Button
+            android:id="@+id/router_normal"
+            android:layout_width="192dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="一般跳转" />
+
+        <Button
+            android:id="@+id/router_grouter"
+            android:layout_width="192dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="标准Router跳转" />
+
+        <Button
+            android:id="@+id/router_grouter_with_params"
+            android:layout_width="192dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="标准Router跳转传参" />
+
+        <Button
+            android:id="@+id/router_fragment"
+            android:layout_width="192dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="获取Fragment实例" />
+
+        <Button
+            android:id="@+id/router_webview"
+            android:layout_width="192dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="跳转到WebView" />
+
+        <Button
+            android:id="@+id/router_interface"
+            android:layout_width="192dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="接口跳转" />
+
+        <Button
+            android:id="@+id/router_fragmentactivity"
+            android:layout_width="192dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:text="跳转到FragmentActivity" />
+    </LinearLayout>
+
+</ScrollView>

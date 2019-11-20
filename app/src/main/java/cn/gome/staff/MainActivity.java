@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
 
     private static final String TAG = MainActivity.class.getName();
 
-    @RouteEvent(uri = "/demo/event", threadMode = ThreadMode.Background)
+    @RouteEvent(uri = "/demo/event", threadMode = ThreadMode.Posting)
     public void onEvent(Bundle params) {
         Toast.makeText(MainActivity.this, params.getString("text"), Toast.LENGTH_SHORT).show();
     }

@@ -2,6 +2,8 @@ package cn.gome.staff.service;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import com.gome.mobile.frame.router.BaseRouteService;
 import com.gome.mobile.frame.router.annotation.IService;
@@ -20,6 +22,14 @@ public class DemoServiceImpl extends BaseRouteService implements DemoService {
     @Override
     public void getStringAsync(Bundle params, Result result) {
         startActivityForResult(new Intent(getContext(), ResultActivity.class), 100, result);
+    }
+
+    @Override
+    public View getView(Bundle params, Result result) {
+        TextView textView = new TextView(getContext());
+        textView.setText("A string in RouteView");
+
+        return textView;
     }
 
     @Override

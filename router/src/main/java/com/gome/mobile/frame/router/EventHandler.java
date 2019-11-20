@@ -4,24 +4,29 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 
 import cn.gome.mobile.frame.GThreadPool;
 
 public class EventHandler {
-    private final Object receiver;
+    private final WeakReference<Object> receiverRef;
     private final Method method;
     private final ThreadMode threadMode;
 
     private Handler mainHandler = new Handler(Looper.getMainLooper());
 
     public EventHandler(Object receiver, Method method, ThreadMode threadMode) {
-        this.receiver = receiver;
+        this.receiverRef = new WeakReference<>(receiver);
         this.method = method;
         this.threadMode = threadMode;
     }
 
     public void handle(final Bundle params) {
+        final Object receiver = receiverRef.get();
+        if (receiver == null) {
+            return;
+        }
         Runnable invokeMethod = new Runnable() {
             @Override
             public void run() {
@@ -74,7 +79,7 @@ public class EventHandler {
     }
 
     public Object getReceiver() {
-        return receiver;
+        return receiverRef.get();
     }
 
     public Method getMethod() {

@@ -14,8 +14,8 @@ import java.util.Set;
 
 public class ReflectUtil {
 
-    public static @NonNull
-    List<Class<?>> getInterfaceGenericClasses(Class<?> clazz, Class<?> interfaceType) {
+    @NonNull
+    public static List<Class<?>> getInterfaceGenericClasses(Class<?> clazz, Class<?> interfaceType) {
         List<Class<?>> result = new LinkedList<>();
         if (clazz == null || interfaceType == null) {
             return result;
@@ -41,8 +41,8 @@ public class ReflectUtil {
         return result;
     }
 
-    public static @NonNull
-    Set<Class<?>> getInheritedInterfaces(Class<?> clazz) {
+    @NonNull
+    public static Set<Class<?>> getInheritedInterfaces(Class<?> clazz) {
         if (clazz == null || clazz == Object.class) {
             return Collections.emptySet();
         }
@@ -59,8 +59,8 @@ public class ReflectUtil {
         return result;
     }
 
-    public static @NonNull
-    Set<Method> findDeclaredMethodsByAnnotation(Class<?> clazz, Class<? extends Annotation> annotationType) {
+    @NonNull
+    public static Set<Method> findDeclaredMethodsByAnnotation(Class<?> clazz, Class<? extends Annotation> annotationType) {
         if (clazz == null || clazz == Object.class) {
             return Collections.emptySet();
         }
