@@ -1,6 +1,6 @@
 ext {
-    groupId = getProperty("ROUTER_GROUP")
-    version = getProperty("ROUTER_VERSION")
+    groupId = group
+    version = version
     artifactId = "router"
     packaging = "aar"
 }

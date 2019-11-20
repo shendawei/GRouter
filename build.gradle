@@ -16,6 +16,9 @@ allprojects {
         targetSdkVersion = 26
         minSdkVersion = 16
     }
+
+    group getProperty("ROUTER_GROUP")
+    version getProperty("ROUTER_VERSION")
 }
 
 task clean(type: Delete) {
