@@ -1,2 +1,4 @@
-include ':app', ':RouterTestLibrary'
+include ':app'
+include ':RouterTestLibrary'
+
 include ":router"

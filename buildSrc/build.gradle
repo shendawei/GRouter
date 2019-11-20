@@ -1,18 +1,23 @@
 ext {
     groupId = "com.gutils.router"
-    version = "2.3.0-v14"
+    version = "3.2.1-v14"
     artifactId = "router"
     packaging = "jar"
+
+    maven_plugin_url = "http://m-maven.ds.gome.com.cn/nexus/content/groups/plugin"
+    maven_release_url = "http://10.115.3.135:8081/nexus/content/repositories/releases/"
+    maven_user = "deployment"
+    maven_pass = "qiudongchao1988"
 }
 
 repositories {
     maven {
-            url "http://m-maven.ds.gome.com.cn/nexus/content/groups/plugin"
-            credentials {
-                username = "deployment"
-                password = "qiudongchao1988"
-            }
+        url project.ext.maven_plugin_url
+        credentials {
+            username = project.ext.maven_user
+            password = project.ext.maven_pass
         }
+    }
 }
 
 apply plugin: 'groovy'
@@ -20,17 +25,17 @@ apply plugin: 'maven'
 
 
 dependencies {
-    compile gradleApi()
-    compile localGroovy()
+    implementation gradleApi()
+    implementation localGroovy()
 
-    compile 'com.android.tools.build:gradle:3.2.1'
+    implementation 'com.android.tools.build:gradle:3.2.1'
 }
 
 uploadArchives {
     repositories.mavenDeployer {
         name = 'AARDeployer'
-        repository(url: "http://10.115.3.135:8081/nexus/content/repositories/releases/") {
-            authentication(userName: "deployment", password: "qiudongchao1988")
+        repository(url: project.ext.maven_release_url) {
+            authentication(userName: project.ext.maven_user, password: project.ext.maven_pass)
         }
         pom.version = project.ext.version
         pom.artifactId = project.ext.artifactId
