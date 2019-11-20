@@ -1,6 +1,6 @@
 ext {
-    groupId = "com.gome.mcp"
-    version = getProperty("AAR_MVP_VERSION")
+    groupId = getProperty("ROUTER_GROUP")
+    version = getProperty("ROUTER_VERSION")
     artifactId = "test"
     packaging = "aar"
 }
@@ -11,3 +11,5 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(":router")
 }
+
+apply from: project.rootProject.uri('gradle/maven.gradle')

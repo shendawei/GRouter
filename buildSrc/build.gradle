@@ -1,13 +1,16 @@
+Properties config = new Properties()
+config.load(new FileInputStream(project.file('../gradle.properties')))
+
 ext {
-    groupId = "com.gutils.router"
-    version = "3.2.1-v14"
-    artifactId = "router"
+    groupId = config.getProperty('ROUTER_GROUP')
+    version = config.getProperty('ROUTER_VERSION')
+    artifactId = "build"
     packaging = "jar"
 
-    maven_plugin_url = "http://m-maven.ds.gome.com.cn/nexus/content/groups/plugin"
-    maven_release_url = "http://10.115.3.135:8081/nexus/content/repositories/releases/"
-    maven_user = "deployment"
-    maven_pass = "qiudongchao1988"
+    maven_plugin_url = config.getProperty('MAVEN_PLUGIN_REPO')
+    maven_release_url = config.getProperty('MAVEN_URL')
+    maven_user = config.getProperty('MAVEN_USER')
+    maven_pass = config.getProperty('MAVEN_PASS')
 }
 
 repositories {

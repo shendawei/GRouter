@@ -13,7 +13,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion as Integer
 
         versionCode 1
-        versionName getProperty('AAR_ROUTER_VERSION')
+        versionName getProperty('ROUTER_VERSION')
         multiDexEnabled true
     }
 

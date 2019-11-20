@@ -1,6 +1,6 @@
 ext {
-    groupId = "com.gome.mcp"
-    version = getProperty("AAR_ROUTER_VERSION")
+    groupId = getProperty("ROUTER_GROUP")
+    version = getProperty("ROUTER_VERSION")
     artifactId = "router"
     packaging = "aar"
 }
@@ -10,8 +10,9 @@ apply from: project.rootProject.uri('gradle/module.gradle')
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.SFastJson
-    implementation deps.SAppcompat
     implementation deps.GThread
+
+    api deps.SAppcompat
 
     testImplementation "junit:junit:4.12"
     testImplementation "org.mockito:mockito-all:1.10.19"
