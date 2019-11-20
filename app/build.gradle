@@ -2,14 +2,16 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.gutils.router'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "28.0.3"
+    compileSdkVersion rootProject.ext.compileSdkVersion as Integer
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
 
     defaultConfig {
         applicationId "com.gome.app"
-        minSdkVersion 16
-        targetSdkVersion 26
+
+        minSdkVersion rootProject.ext.minSdkVersion as Integer
+        targetSdkVersion rootProject.ext.targetSdkVersion as Integer
+
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -22,7 +24,6 @@ android {
     lintOptions {
         abortOnError false
     }
-
 
     buildTypes {
         release {
@@ -39,9 +40,11 @@ routerExt {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile project(":router")
-    compile project(":RouterTestLibrary")
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation deps.SAppcompat
+    implementation deps.SConstraintLayout
+
+    implementation project(":router")
+    implementation project(":RouterTestLibrary")
 }

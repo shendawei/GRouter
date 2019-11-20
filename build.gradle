@@ -1,21 +1,3 @@
-buildscript {
-    ext.kotlin_version = '1.3.50'
-    repositories {
-         maven {
-            url "http://m-maven.ds.gome.com.cn/nexus/content/groups/plugin"
-            credentials {
-                username = getProperty("MAVEN_USER")
-                password = getProperty("MAVEN_PASS")
-            }
-        }
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
-    }
-}
-
 ext.kotlin_version = '1.3.50'
 
 allprojects {
@@ -33,8 +15,6 @@ allprojects {
         buildToolsVersion = "28.0.3"
         targetSdkVersion = 26
         minSdkVersion = 16
-
-        proDeps = false
     }
 }
 
@@ -43,49 +23,10 @@ task clean(type: Delete) {
 }
 
 ext.deps = [
-        //kotlin support
-        SKotlin       : "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version",
-        //support
-        SRecyclerview : 'com.android.support:recyclerview-v7:25.3.1',
-        SAppcompat    : 'com.android.support:appcompat-v7:25.3.1',
-        SDesign       : 'com.android.support:design:25.3.1',
-        SDex          : 'com.android.support:multidex:1.0.1',
-        SRxjava       : 'io.reactivex.rxjava2:rxjava:2.1.12',
+        SAppcompat    : 'com.android.support:appcompat-v7:26.1.0',
+        SConstraintLayout    : 'com.android.support.constraint:constraint-layout:1.1.3',
+
         SFastJson     : 'com.alibaba:fastjson:1.1.68.android',
-        //基础模块
-        GHttp        : 'com.gome.mcp:http:' + getProperty('AAR_MVP_VERSION') + '@aar',
-        GSec         : 'com.gome.mcp:sec:' + getProperty('AAR_MVP_VERSION') + '@aar',
-        GUtils       : 'com.gome.mcp:utils:' + getProperty('AAR_MVP_VERSION') + '@aar',
-        GScan        : 'com.gome.mcp:scan:' + getProperty('AAR_MVP_VERSION') + '@aar',
-        GThread      : 'com.gome.mcp:thread:' + getProperty('AAR_MVP_VERSION') + '@aar',
-        GCrash       : 'com.gome.mcp:crash:' + getProperty('AAR_MVP_VERSION') + '@aar',
-        GSafekeyboard: 'com.gome.mcp:safeKeyboard:' + getProperty('AAR_MVP_VERSION') + '@aar',
-        GImage       : 'com.gome.mcp:image:' + getProperty('AAR_MVP_VERSION') + '@aar',
-        GBuildConfig : 'com.gome.mcp:buildconfig:' + getProperty('AAR_MVP_VERSION'),
-        GLog         : 'com.gome.mcp:log:' + getProperty('AAR_MVP_VERSION') + '@aar',
-        GMVP         : 'com.gome.mcp:mvp:' + getProperty('AAR_MVP_VERSION') + '@aar',
-        GBus         : 'com.gome.mcp:bus:' + getProperty('AAR_MVP_VERSION') + '@aar',
-        GDAO         : 'com.gome.mcp:dao:' + getProperty('AAR_MVP_VERSION') + '@aar',
-        GCACHE       : 'com.gome.mcp:cache:' + getProperty('AAR_MVP_VERSION') + '@aar',
-        //通用UI模块
-        GDialog       : false ? project(':GDialog') : 'cn.gome.staff.ui:dialog:' + getProperty('AAR_UI_DIALOG_VERSION') + '@aar',
-        GPullToRefresh: false ? project(':GPullToRefresh') : 'cn.gome.staff.ui:pulltorefresh:' + getProperty('AAR_UI_PULLTOREFRESH_VERSION') + '@aar',
-        GSelectPhoto  : false ? project(':GSelectPhoto') : 'cn.gome.staff.ui:selectphoto:' + getProperty('AAR_UI_SELECTPHOTO_VERSION') + '@aar',
-        GStatusView   : false ? project(':GStatusView') : 'cn.gome.staff.ui:statusview:' + getProperty('AAR_UI_STATUSVIEW_VERSION') + '@aar',
-        GTitleBar     : false ? project(':GTitleBar') : 'cn.gome.staff.ui:titlebar:' + getProperty('AAR_UI_TITLEBAR_VERSION') + '@aar',
-        GView         : false ? project(':GView') : 'cn.gome.staff.ui:view:' + getProperty('AAR_UI_VIEW_VERSION') + '@aar',
-        //业务模块
-        GKtx         : rootProject.ext.proDeps ? project(':GKtx') : 'com.gome.mcp:ktx:' + getProperty('AAR_GKTX_VERSION') + '@aar',
-        SBuss         : rootProject.ext.proDeps ? project(':SBuss') : 'cn.gome.staff:buss:' + getProperty('AAR_SBUSS_VERSION') + '@aar',
-        SScheme       : rootProject.ext.proDeps ? project(':SScheme') : 'cn.gome.staff:scheme:' + getProperty('AAR_SSCHEME_VERSION') + '@aar',
-        STheme        : rootProject.ext.proDeps ? project(':STheme') : 'cn.gome.staff:theme:' + getProperty('AAR_STHEME_VERSION') + '@aar',
-        SAccount      : rootProject.ext.proDeps ? project(':SAccount') : 'cn.gome.staff:account:' + getProperty('AAR_SACCOUNT_VERSION') + '@aar',
-        SCashier      : rootProject.ext.proDeps ? project(':SCashier') : 'cn.gome.staff:cashier:' + getProperty('AAR_SCASHIER_VERSION') + '@aar',
-        SCreateOrder  : rootProject.ext.proDeps ? project(':SCreateOrder') : 'cn.gome.staff:createorder:' + getProperty('AAR_SCREATEORDER_VERSION') + '@aar',
-        SGuide        : rootProject.ext.proDeps ? project(':SGuide') : 'cn.gome.staff:guide:' + getProperty('AAR_SGUIDE_VERSION') + '@aar',
-        SLogin        : rootProject.ext.proDeps ? project(':SLogin') : 'cn.gome.staff:login:' + getProperty('AAR_SLOGIN_VERSION') + '@aar',
-        SOrder        : rootProject.ext.proDeps ? project(':SOrder') : 'cn.gome.staff:order:' + getProperty('AAR_SORDER_VERSION') + '@aar',
-        SReturn       : rootProject.ext.proDeps ? project(':SReturn') : 'cn.gome.staff:returns:' + getProperty('AAR_SRETURN_VERSION') + '@aar',
-        SScan         : rootProject.ext.proDeps ? project(':SScan') : 'cn.gome.staff:scan:' + getProperty('AAR_SSCAN_VERSION') + '@aar',
-        SShopList     : rootProject.ext.proDeps ? project(':SShopList') : 'cn.gome.staff:shoplist:' + getProperty('AAR_SSHOPLIST_VERSION') + '@aar'
+
+        GThread      : 'com.gome.mcp:thread:' + getProperty('AAR_MVP_VERSION') + '@aar'
 ]
