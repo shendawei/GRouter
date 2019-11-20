@@ -1,3 +1,2 @@
 include ':app', ':RouterTestLibrary'
-include ":testkt"
 include ":router"

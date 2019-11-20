@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.gutils.router'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "28.0.3"
 
 
     defaultConfig {
         applicationId "com.gome.app"
-        minSdkVersion 14
-        targetSdkVersion 25
+        minSdkVersion 16
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -44,5 +44,4 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile project(":router")
     compile project(":RouterTestLibrary")
-    compile project(":testkt")
 }

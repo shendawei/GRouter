@@ -6,7 +6,13 @@ ext {
 }
 
 repositories {
-    jcenter()
+    maven {
+            url "http://m-maven.ds.gome.com.cn/nexus/content/groups/plugin"
+            credentials {
+                username = "deployment"
+                password = "qiudongchao1988"
+            }
+        }
 }
 
 apply plugin: 'groovy'
@@ -17,7 +23,7 @@ dependencies {
     compile gradleApi()
     compile localGroovy()
 
-    compile 'com.android.tools.build:gradle:2.3.0'
+    compile 'com.android.tools.build:gradle:3.2.1'
 }
 
 uploadArchives {

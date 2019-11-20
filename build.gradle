@@ -1,34 +1,38 @@
 buildscript {
-    ext.kotlin_version = '1.2.31'
-    ext.kotlin_version = '1.2.30'
+    ext.kotlin_version = '1.3.50'
     repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
-    }
-}
-
-ext.kotlin_version = '1.2.30'
-
-allprojects {
-    repositories {
-        maven {
-            url getProperty("MAVEN_REPO")
+         maven {
+            url "http://m-maven.ds.gome.com.cn/nexus/content/groups/plugin"
             credentials {
                 username = getProperty("MAVEN_USER")
                 password = getProperty("MAVEN_PASS")
             }
         }
-        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
+    }
+}
+
+ext.kotlin_version = '1.3.50'
+
+allprojects {
+    repositories {
+        maven {
+            url "http://m-maven.ds.gome.com.cn/nexus/content/groups/public"
+            credentials {
+                username = "deployment"
+                password = "qiudongchao1988"
+            }
+        }
     }
     ext {
-        compileSdkVersion = 25
-        buildToolsVersion = "25.0.2"
-        targetSdkVersion = 25
-        minSdkVersion = 14
+        compileSdkVersion = 26
+        buildToolsVersion = "28.0.3"
+        targetSdkVersion = 26
+        minSdkVersion = 16
 
         proDeps = false
     }
