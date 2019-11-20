@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.gome.mobile.frame.router.annotation.IActivity;
+import com.gome.mobile.frame.router.annotation.IApp;
 import com.gome.mobile.frame.router.annotation.IFragment;
 import com.gome.mobile.frame.router.annotation.IRoute;
 import com.gome.mobile.frame.router.annotation.IRouter;
@@ -25,6 +26,9 @@ import com.gome.mobile.frame.router.utils.ReflectUtil;
 import java.lang.annotation.Annotation;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,11 +70,35 @@ public class GRouter {
     private static HashMap<String, Class> mServiceClassMap = new HashMap<>();
     private static HashMap<String, Class> mFragmentClassMap = new HashMap<>();
     private static HashMap<String, Class> mActivityClassMap = new HashMap<>();
+    private static List<AppEntity> mAppClassList = new ArrayList<>();
 
     /**
      * 初始化GRouter
      */
     public void init() {
+    }
+
+    /**
+     * dispatcher application
+     *
+     * @param application
+     */
+    public void dispatcher(Application application, boolean debug) {
+        Collections.sort(mAppClassList, new Comparator<AppEntity>() {
+            @Override
+            public int compare(AppEntity t0, AppEntity t1) {
+                return t0.getPriority().compareTo(t1.getPriority());
+            }
+        });
+        for (AppEntity entity : mAppClassList) {
+            Class appClass = entity.classApp;
+            try {
+                App app = (App) appClass.newInstance();
+                app.dispatcher(application, debug);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void setContext(Context context) {
@@ -98,7 +126,20 @@ public class GRouter {
         if (registerIService(className)) {
             return;
         }
+        if (registerIApp(className)) {
+            return;
+        }
         registerIRouter(className);
+    }
+
+    private static boolean registerIApp(Class className) {
+        Annotation anno = className.getAnnotation(IApp.class);
+        if (checkAnnotationNotNull(anno) && App.class.isAssignableFrom(className)) {
+            IApp app = (IApp) anno;
+            mAppClassList.add(new AppEntity(app.priority(), className));
+            return true;
+        }
+        return false;
     }
 
     private static boolean registerIRouter(Class className) {
@@ -713,6 +754,32 @@ public class GRouter {
             public void error(String errorMessage, Throwable cause) {
                 error(null, errorMessage, cause);
             }
+        }
+    }
+
+    private static class AppEntity {
+        private Integer priority;
+        private Class classApp;
+
+        public AppEntity(int priority, Class classApp) {
+            this.priority = priority;
+            this.classApp = classApp;
+        }
+
+        public Integer getPriority() {
+            return priority;
+        }
+
+        public void setPriority(Integer priority) {
+            this.priority = priority;
+        }
+
+        public Class getClassApp() {
+            return classApp;
+        }
+
+        public void setClassApp(Class classApp) {
+            this.classApp = classApp;
         }
     }
 

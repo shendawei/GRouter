@@ -14,5 +14,5 @@ public interface App {
      *
      * @param application
      */
-    void dispatcher(Application application);
+    void dispatcher(Application application, boolean debug);
 }

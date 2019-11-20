@@ -9,7 +9,7 @@ import com.gome.mobile.frame.router.annotation.IApp;
 @IApp(priority = 1)
 public class AppProxy implements App {
     @Override
-    public void dispatcher(Application application) {
-        Log.d("appinit","IApp Proxy");
+    public void dispatcher(Application application, boolean debug) {
+        Log.d("appinit", "IApp Proxy");
     }
 }
