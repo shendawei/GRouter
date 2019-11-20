@@ -40,11 +40,11 @@ routerExt {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation deps.SAppcompat
-    implementation deps.SConstraintLayout
+    compile deps.SAppcompat
+    compile deps.SConstraintLayout
 
-    implementation project(":router")
-    implementation project(":RouterTestLibrary")
+    compile project(":router")
+    compile project(":RouterTestLibrary")
 }

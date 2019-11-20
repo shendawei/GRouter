@@ -8,19 +8,19 @@ ext {
 apply from: project.rootProject.uri('gradle/module.gradle')
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation deps.SFastJson
-    implementation deps.GThread
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile deps.SFastJson
+    compile deps.GThread
 
-    api deps.SAppcompat
+    compile deps.SAppcompat
 
-    testImplementation "junit:junit:4.12"
-    testImplementation "org.mockito:mockito-all:1.10.19"
-    testImplementation "org.powermock:powermock-module-junit4:1.6.4"
-    testImplementation "org.powermock:powermock-module-junit4-rule:1.6.4"
-    testImplementation "org.powermock:powermock-api-mockito:1.6.4"
+    testCompile "junit:junit:4.12"
+    testCompile "org.mockito:mockito-all:1.10.19"
+    testCompile "org.powermock:powermock-module-junit4:1.6.4"
+    testCompile "org.powermock:powermock-module-junit4-rule:1.6.4"
+    testCompile "org.powermock:powermock-api-mockito:1.6.4"
 
-    testImplementation "org.robolectric:robolectric:3.3.2"
+    testCompile "org.robolectric:robolectric:3.3.2"
 }
 
 apply from: project.rootProject.uri('gradle/maven.gradle')

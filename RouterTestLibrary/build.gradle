@@ -8,8 +8,8 @@ ext {
 apply from: project.rootProject.uri('gradle/module.gradle')
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(":router")
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(":router")
 }
 
 apply from: project.rootProject.uri('gradle/maven.gradle')
