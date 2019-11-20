@@ -35,7 +35,7 @@ android {
 }
 
 routerExt {
-    targetPackageName = ['com.tech.integer', '321', '123321']
+    targetPackageName = ['com.tech.integer', '321', '123321', 'com.gutils.appinit']
     filterPackageName = ['qqq', 'www', 'eee']
 }
 

@@ -37,6 +37,7 @@ public class PluginLaunch implements Plugin<Project> {
             list.add(new ScanSetting('IService'))
             list.add(new ScanSetting('IActivity'))
             list.add(new ScanSetting('IFragment'))
+            list.add(new ScanSetting('IApp'))
             RegisterTransform.registerList = list
             //register this plugin
             android.registerTransform(transformImpl)
