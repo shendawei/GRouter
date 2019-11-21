@@ -44,6 +44,7 @@ dependencies {
 
     compile deps.SAppcompat
     compile deps.SConstraintLayout
+    compile deps.SMultidex
 
     compile project(":router")
     compile project(":RouterTestLibrary")

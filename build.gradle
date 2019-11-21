@@ -28,6 +28,7 @@ task clean(type: Delete) {
 ext.deps = [
         SAppcompat       : 'com.android.support:appcompat-v7:26.1.0',
         SConstraintLayout: 'com.android.support.constraint:constraint-layout:1.1.3',
+        SMultidex: 'com.android.support:multidex:1.0.1@aar',
 
         SFastJson        : 'com.alibaba:fastjson:1.1.68.android',
 
