@@ -1,20 +1,14 @@
 package com.gome.mobile.frame.router;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
-
-import cn.gome.mobile.frame.GThreadPool;
 
 public class EventHandler {
     private final WeakReference<Object> receiverRef;
     private final Method method;
     private final ThreadMode threadMode;
-
-    private Handler mainHandler = new Handler(Looper.getMainLooper());
 
     public EventHandler(Object receiver, Method method, ThreadMode threadMode) {
         this.receiverRef = new WeakReference<>(receiver);
@@ -27,6 +21,7 @@ public class EventHandler {
         if (receiver == null) {
             return;
         }
+
         Runnable invokeMethod = new Runnable() {
             @Override
             public void run() {
@@ -35,10 +30,13 @@ public class EventHandler {
         };
         switch (threadMode) {
             case Main:
-                mainHandler.post(invokeMethod);
+                ThreadPool.getInstance().runOnMainThread(invokeMethod);
                 break;
             case Background:
-                GThreadPool.runOnCalcThread(invokeMethod);
+                ThreadPool.getInstance().runOnBackground(invokeMethod);
+                break;
+            case Async:
+                ThreadPool.getInstance().runOnIndividualThread(invokeMethod);
                 break;
             case Posting:
             default:

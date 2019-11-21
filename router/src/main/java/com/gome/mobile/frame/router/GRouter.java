@@ -35,8 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import cn.gome.mobile.frame.GThreadPool;
-
 /**
  * Gome IRouter
  *
@@ -54,7 +52,6 @@ public class GRouter {
     WeakReference<Context> mContext = null;
 
     private GRouter() {
-        GThreadPool.init();
     }
 
     /**
