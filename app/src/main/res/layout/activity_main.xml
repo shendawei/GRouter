@@ -38,6 +38,13 @@
             android:text="发送事件" />
 
         <Button
+            android:id="@+id/router_get_service"
+            android:layout_width="192dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="获取服务" />
+
+        <Button
             android:id="@+id/router_request"
             android:layout_width="192dp"
             android:layout_height="wrap_content"

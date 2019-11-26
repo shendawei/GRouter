@@ -275,30 +275,150 @@ public class GRouter {
         return null;
     }
 
-    public Object navigationService(String path, NavigationCallback callback) {
-        Class serviceClass = getServiceClass(path);
-        if (serviceClass == null) {
-            if (callback != null) {
-                callback.onLost(new Postcard(path));
-            }
-        } else {
-            if (callback != null) {
-                callback.onFound(new Postcard(path));
+    /**
+     * 通过类型获取一个服务实例
+     *
+     * @param view View对象，主要用于获取 Context
+     * @param type 服务实例的 Class 类型 或 Interface 类型
+     * @return 服务实例
+     */
+    public Object navigationService(View view, Class<?> type) {
+        return navigationService(view, type, null);
+    }
+
+    /**
+     * 通过类型获取一个服务实例
+     *
+     * @param fragment Fragment对象，主要用于获取 Context
+     * @param type     服务实例的 Class 类型 或 Interface 类型
+     * @return 服务实例
+     */
+    public Object navigationService(Fragment fragment, Class<?> type) {
+        return navigationService(fragment, type, null);
+    }
+
+    /**
+     * 通过类型获取一个服务实例
+     *
+     * @param context 当前上下文
+     * @param type    服务实例的 Class 类型 或 Interface 类型
+     * @return 服务实例
+     */
+    public Object navigationService(Context context, Class<?> type) {
+        return navigationService(context, type, null);
+    }
+
+    /**
+     * 通过类型获取一个服务实例
+     *
+     * @param view     View对象，主要用于获取 Context
+     * @param type     服务实例的 Class 类型 或 Interface 类型
+     * @param callback NavigationCallback 类型回调，用于监听 Service 生命周期
+     * @return 服务实例
+     */
+    public Object navigationService(View view, Class<?> type, NavigationCallback callback) {
+        return navigationService(view.getContext(), type, callback);
+    }
+
+    /**
+     * 通过类型获取一个服务实例
+     *
+     * @param fragment Fragment对象，主要用于获取 Context
+     * @param type     服务实例的 Class 类型 或 Interface 类型
+     * @param callback NavigationCallback 类型回调，用于监听 Service 生命周期
+     * @return 服务实例
+     */
+    public Object navigationService(Fragment fragment, Class<?> type, NavigationCallback callback) {
+        return navigationService(fragment.getContext(), type, callback);
+    }
+
+    /**
+     * 通过类型获取一个服务实例
+     *
+     * @param context  当前上下文
+     * @param type     服务实例的 Class 类型 或 Interface 类型
+     * @param callback NavigationCallback 类型回调，用于监听 Service 生命周期
+     * @return 服务实例
+     */
+    public Object navigationService(Context context, Class<?> type, NavigationCallback callback) {
+        setContext(context);
+        for (Class<?> clazz : mServiceClassMap.values()) {
+            if (type.isAssignableFrom(clazz)) {
+                return mServiceManager.findService(null, clazz, callback);
             }
         }
-        try {
-            Object instance = serviceClass.getConstructor().newInstance();
-            return instance;
-        } catch (Exception ex) {
-            Log.e(TAG, "Fetch Service instance error, " + ex.getStackTrace());
-            if (callback != null) {
-                callback.onInterrupt(new Postcard(path));
-            }
-        }
-        if (callback != null) {
-            callback.onArrival(new Postcard(path));
-        }
+
         return null;
+    }
+
+    /**
+     * 通过 URI 获取一个服务实例
+     *
+     * @param view View对象，主要用于获取 Context
+     * @param path 服务实例的 URI
+     * @return 服务实例
+     */
+    public Object navigationService(View view, String path) {
+        return navigationService(view, path, null);
+    }
+
+    /**
+     * 通过 URI 获取一个服务实例
+     *
+     * @param fragment Fragment对象，主要用于获取 Context
+     * @param path     服务实例的 URI
+     * @return 服务实例
+     */
+    public Object navigationService(Fragment fragment, String path) {
+        return navigationService(fragment, path, null);
+    }
+
+    /**
+     * 通过 URI 获取一个服务实例
+     *
+     * @param context 当前上下文
+     * @param path    服务实例的 URI
+     * @return 服务实例
+     */
+    public Object navigationService(Context context, String path) {
+        return navigationService(context, path, null);
+    }
+
+    /**
+     * 通过 URI 获取一个服务实例
+     *
+     * @param view     View对象，主要用于获取 Context
+     * @param path     服务实例的 URI
+     * @param callback NavigationCallback 类型回调，用于监听 Service 生命周期
+     * @return 服务实例
+     */
+    public Object navigationService(View view, String path, NavigationCallback callback) {
+        return navigationService(view.getContext(), path, callback);
+    }
+
+    /**
+     * 通过 URI 获取一个服务实例
+     *
+     * @param fragment Fragment对象，主要用于获取 Context
+     * @param path     服务实例的 URI
+     * @param callback NavigationCallback 类型回调，用于监听 Service 生命周期
+     * @return 服务实例
+     */
+    public Object navigationService(Fragment fragment, String path, NavigationCallback callback) {
+        return navigationService(fragment.getContext(), path, callback);
+    }
+
+    /**
+     * 通过 URI 获取一个服务实例
+     *
+     * @param context  当前上下文
+     * @param path     服务实例的 URI
+     * @param callback NavigationCallback 类型回调，用于监听 Service 生命周期
+     * @return 服务实例
+     */
+    public Object navigationService(Context context, String path, NavigationCallback callback) {
+        setContext(context);
+        return mServiceManager.findService(path, getServiceClass(path), callback);
     }
 
     void navigation(Activity activity, Postcard postcard, int requestCode) {
@@ -514,12 +634,27 @@ public class GRouter {
 
     /**
      * 获取服务的实例
+     * 已废弃，请用 navigationService(Context, String)
      *
      * @param path 服务实例地址
-     * @return
+     * @return 服务实例
      */
+    @Deprecated
     public Object navigationService(String path) {
-        return navigationService(path, null);
+        return navigationService((Context) null, path, null);
+    }
+
+    /**
+     * 获取服务的实例
+     * 已废弃，请用 navigationService(Context, String, NavigationCallback)
+     *
+     * @param path     服务实例地址
+     * @param callback 用于监听 Service 生命周期的回调
+     * @return 服务实例
+     */
+    @Deprecated
+    public Object navigationService(String path, NavigationCallback callback) {
+        return navigationService((Context)null, path, null);
     }
 
     /**
@@ -643,7 +778,6 @@ public class GRouter {
             }
 
             RouteService service = (RouteService) serviceObj;
-            service.setActivityProxy(this);
 
             int serviceId = generateServiceId();
             Result result = new ResultImpl(serviceId, callback);
@@ -651,6 +785,36 @@ public class GRouter {
             pendingServices.add(new ServiceHolder(generateServiceId(), service, result));
 
             return handler.handle(service, params, result);
+        }
+
+        Object findService(String path, Class<?> serviceClass, NavigationCallback callback) {
+            if (serviceClass == null) {
+                if (callback != null) {
+                    callback.onLost(new Postcard(path));
+                }
+            } else {
+                if (callback != null) {
+                    callback.onFound(new Postcard(path));
+                }
+            }
+            try {
+                Object instance = serviceClass.getConstructor().newInstance();
+                if (instance instanceof RouteService) {
+                    RouteService service = (RouteService) instance;
+                    service.setActivityProxy(this);
+                }
+
+                return instance;
+            } catch (Exception ex) {
+                Log.e(TAG, "Fetch Service instance error, " + ex.getStackTrace());
+                if (callback != null) {
+                    callback.onInterrupt(new Postcard(path));
+                }
+            }
+            if (callback != null) {
+                callback.onArrival(new Postcard(path));
+            }
+            return null;
         }
 
         private ServiceHolder getServiceId(Object service) {

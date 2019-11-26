@@ -19,6 +19,7 @@ import com.gome.mobile.frame.router.intf.NavigationCallback;
 import com.gome.mobile.frame.router.intf.RequestCallback;
 
 import cn.gome.staff.activity.TestFragmentActivity1Activity;
+import cn.gome.staff.service.DemoService;
 
 
 public class MainActivity extends Activity {
@@ -45,6 +46,17 @@ public class MainActivity extends Activity {
                         .build("/demo/event")
                         .withString("text", "A string from event")
                         .broadcast();
+            }
+        });
+
+        findViewById(R.id.router_get_service).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DemoService service = (DemoService) GRouter.getInstance()
+                        .navigationService(MainActivity.this, DemoService.class);
+                String text = service.getString(null, null);
+
+                Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
             }
         });
 
