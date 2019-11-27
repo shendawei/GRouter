@@ -77,7 +77,7 @@ public class Postcard {
     }
 
     public void navigation(Activity activity, int requestCode) {
-        GRouter.getInstance().navigation(activity, this,  requestCode);
+        GRouter.getInstance().navigation(activity, this, requestCode);
     }
 
     public void navigation(Fragment fragment) {
@@ -99,19 +99,47 @@ public class Postcard {
         GRouter.getInstance().navigation(view.getContext(), this);
     }
 
+    public Object request(Context context) {
+        return request(context, null);
+    }
+
     public Object request(Context context, RequestCallback callback) {
+        if (context == null) {
+            return null;
+        }
         return GRouter.getInstance().navigationRequest(context, callback, this);
     }
 
+    public Object request(Application application) {
+        return request(application, null);
+    }
+
     public Object request(Application application, RequestCallback callback) {
+        if (application == null) {
+            return null;
+        }
         return request(application.getApplicationContext(), callback);
     }
 
+    public Object request(Fragment fragment) {
+        return request(fragment, null);
+    }
+
     public Object request(Fragment fragment, RequestCallback callback) {
+        if (fragment == null) {
+            return null;
+        }
         return request(fragment.getContext(), callback);
     }
 
+    public Object request(View view) {
+        return request(view, null);
+    }
+
     public Object request(View view, RequestCallback callback) {
+        if (view == null) {
+            return null;
+        }
         return request(view.getContext(), callback);
     }
 

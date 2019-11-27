@@ -9,4 +9,10 @@
             <enum name="gone" value="2" />
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="RouteLayout">
+        <attr name="onClickUri" format="string" />
+
+        <attr name="slotId" format="reference" />
+    </declare-styleable>
 </resources>

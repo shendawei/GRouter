@@ -8,6 +8,9 @@ import com.gome.mobile.frame.router.intf.Result;
 
 public interface DemoService {
 
+    @IRoute(uri = "/demo/toastSomething")
+    void toastSomething();
+
     @IRoute(uri = "/demo/getSync")
     String getString(Bundle params, Result result);
 

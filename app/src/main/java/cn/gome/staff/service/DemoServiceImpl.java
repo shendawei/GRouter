@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gome.mobile.frame.router.BaseRouteService;
 import com.gome.mobile.frame.router.annotation.IService;
@@ -13,6 +14,11 @@ import cn.gome.staff.activity.ResultActivity;
 
 @IService("/demo/service1")
 public class DemoServiceImpl extends BaseRouteService implements DemoService {
+
+    @Override
+    public void toastSomething() {
+        Toast.makeText(getContext(), "OnClickUri toast here", Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public String getString(Bundle params, Result result) {

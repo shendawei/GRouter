@@ -76,26 +76,37 @@ public class RouteView extends FrameLayout {
                 .build(uri)
                 .withMethod(RequestMethod.Get)
                 .request(this, null);
+
+        onRouteComplete(value);
+    }
+
+    protected void onRouteComplete(Object value) {
         if (value instanceof View) {
-            Log.d(TAG, "Route success with " + value.toString());
-            removeAllViews();
-            addView((View) value);
+            onRouteSuccess((View) value);
         } else {
-            Log.d(TAG, "Route failed.");
-            setVisibility(absentVisibility);
+            onRouteError(value);
         }
+    }
+
+    protected void onRouteSuccess(View view) {
+        Log.d(TAG, "Route success with " + view.toString());
+        removeAllViews();
+        addView(view);
+    }
+
+    protected void onRouteError(Object value) {
+        Log.d(TAG, "Route failed.");
+        setVisibility(absentVisibility);
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         routeContentView();
-        GRouter.getInstance().register(this);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        GRouter.getInstance().unregister(this);
     }
 }

@@ -39,6 +39,13 @@ public class MainActivity extends Activity {
 
         TestDemo1 demo1 = new TestDemo1();
 
+        findViewById(R.id.router_routelayout).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "OnClick toast here", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         findViewById(R.id.router_broadcast).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
