@@ -6,20 +6,16 @@ import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
-public class RouteLayout extends RouteView implements OnClickListener {
+public class RouteLayout extends RouteView {
     private static String TAG = "RouteLayout";
 
     @Nullable
-    private OnClickListener onClickListener = null;
-
-    @Nullable
-    private String onClickUri = null;
+    protected String conditionUri = null;
 
     @IdRes
-    private int slotId = 0;
+    protected int slotId = 0;
 
     public RouteLayout(Context context) {
         super(context);
@@ -33,13 +29,30 @@ public class RouteLayout extends RouteView implements OnClickListener {
         super(context, attrs, defStyleAttr);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RouteLayout);
-        if (a.hasValue(R.styleable.RouteLayout_onClickUri)) {
-            onClickUri = a.getString(R.styleable.RouteLayout_onClickUri);
+        if (a.hasValue(R.styleable.RouteLayout_conditionUri)) {
+            conditionUri = a.getString(R.styleable.RouteLayout_conditionUri);
         }
         if (a.hasValue(R.styleable.RouteLayout_slotId)) {
             slotId = a.getResourceId(R.styleable.RouteLayout_slotId, slotId);
         }
         a.recycle();
+    }
+
+    @Override
+    protected void onStatusChange() {
+        super.onStatusChange();
+
+        if (getVisibility() != View.VISIBLE) {
+            return;
+        }
+
+        if (getChildCount() > 2) {
+            throw new RuntimeException();
+        }
+
+        if (conditionUri != null && !GRouter.getInstance().exists(conditionUri)) {
+            setVisibility(absentVisibility);
+        }
     }
 
     @Override
@@ -56,26 +69,32 @@ public class RouteLayout extends RouteView implements OnClickListener {
         }
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-
-        if (onClickUri != null) {
-            super.setOnClickListener(this);
-        }
+    @Nullable
+    public String getConditionUri() {
+        return conditionUri;
     }
 
-    @Override
-    public void setOnClickListener(@Nullable OnClickListener onClickListener) {
-        this.onClickListener = onClickListener;
+    public void setConditionUri(@Nullable String conditionUri) {
+        this.conditionUri = conditionUri;
+        onStatusChange();
     }
 
-    @Override
-    public void onClick(View v) {
-        GRouter.getInstance().build(onClickUri).request(v);
+    @Nullable
+    public String getOnClickUri() {
+        return onClickUri;
+    }
 
-        if (onClickListener != null) {
-            onClickListener.onClick(v);
-        }
+    public void setOnClickUri(@Nullable String onClickUri) {
+        this.onClickUri = onClickUri;
+        onStatusChange();
+    }
+
+    public int getSlotId() {
+        return slotId;
+    }
+
+    public void setSlotId(int slotId) {
+        this.slotId = slotId;
+        onStatusChange();
     }
 }

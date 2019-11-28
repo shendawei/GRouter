@@ -2,17 +2,16 @@
 <resources>
     <declare-styleable name="RouteView">
         <attr name="routeUri" format="string" />
-
         <attr name="absentVisibility">
             <enum name="visible" value="0" />
             <enum name="invisible" value="1" />
             <enum name="gone" value="2" />
         </attr>
+        <attr name="onClickUri" format="string" />
     </declare-styleable>
 
     <declare-styleable name="RouteLayout">
-        <attr name="onClickUri" format="string" />
-
+        <attr name="conditionUri" format="string" />
         <attr name="slotId" format="reference" />
     </declare-styleable>
 </resources>

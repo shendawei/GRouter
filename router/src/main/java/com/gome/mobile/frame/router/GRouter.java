@@ -566,14 +566,14 @@ public class GRouter {
     /**
      * 注册路径是否存在
      *
-     * @param clzName
+     * @param path
      * @return
      */
-    public boolean exists(String clzName) {
-        return mServiceClassMap.containsKey(clzName)
-                || mActivityClassMap.containsKey(clzName)
-                || mServiceClassMap.containsKey(clzName)
-                || mFragmentClassMap.containsKey(clzName);
+    public boolean exists(String path) {
+        return mServiceClassMap.containsKey(path)
+                || mActivityClassMap.containsKey(path)
+                || mFragmentClassMap.containsKey(path)
+                || mServiceManager.isRegistered(path);
     }
 
     /**
@@ -747,6 +747,10 @@ public class GRouter {
 
         private int generateServiceId() {
             return (lastSerialNumber = lastSerialNumber % MAX_SERIAL_NUMBER + 1) << SERVICE_ID_SHIFT;
+        }
+
+        boolean isRegistered(String uri) {
+            return handlers.containsKey(uri);
         }
 
         void onRegister(String serviceUri, Class<?> serviceType) {

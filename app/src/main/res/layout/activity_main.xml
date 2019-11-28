@@ -17,9 +17,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+            app:conditionUri="/demo/service1"
             app:routeUri="/demo/getView"
             app:slotId="@+id/route_slot"
-            app:onClickUri="/demo/toastSomething">
+            app:onClickUri="/demo/toastSomething"
+            app:absentVisibility="invisible">
 
             <LinearLayout
                 android:id="@+id/route_slot"
