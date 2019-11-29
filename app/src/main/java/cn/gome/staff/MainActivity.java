@@ -14,7 +14,7 @@ import com.gome.mobile.frame.router.Postcard;
 import com.gome.mobile.frame.router.RequestMethod;
 import com.gome.mobile.frame.router.ThreadMode;
 import com.gome.mobile.frame.router.adapter.ParametersPraserAdapter;
-import com.gome.mobile.frame.router.annotation.IRouteEvent;
+import com.gome.mobile.frame.router.annotation.RouteEvent;
 import com.gome.mobile.frame.router.intf.NavigationCallback;
 import com.gome.mobile.frame.router.intf.RequestCallback;
 
@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
 
     private static final String TAG = MainActivity.class.getName();
 
-    @IRouteEvent(uri = "/demo/event", threadMode = ThreadMode.Main)
+    @RouteEvent(uri = "/demo/event", threadMode = ThreadMode.Main)
     public void onEvent(Bundle params) {
         Log.d("RouteDemoMain", "Got text: " + params.getString("text"));
         Toast.makeText(MainActivity.this, params.getString("text"), Toast.LENGTH_SHORT).show();
@@ -134,7 +134,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
 //                Fragment fragment = (Fragment) GRouter.getInstance().navigationFragment("/demo/test3_fragment");
-                Fragment fragment = (Fragment) GRouter.getInstance().navigationFragment("/demo/test3_fragment", null, new NavigationCallback(){
+                Fragment fragment = (Fragment) GRouter.getInstance().navigationFragment("/demo/test3_fragment", null, new NavigationCallback() {
 
                     @Override
                     public void onFound(Postcard postcard) {
@@ -238,7 +238,6 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
-
 
 
         GRouter.getInstance().build("https://item.m.gomeplus.com/10/53/p|1|2|1130542649.html?stid=A00F")

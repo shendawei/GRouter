@@ -3,6 +3,7 @@ package com.gome.mobile.frame.router;
 import android.os.Bundle;
 
 import com.gome.mobile.frame.router.annotation.IRouteEvent;
+import com.gome.mobile.frame.router.annotation.RouteEvent;
 import com.gome.mobile.frame.router.utils.ReflectUtil;
 
 import java.lang.reflect.Method;
@@ -17,7 +18,23 @@ class EventManager {
     private Map<String, Set<EventHandler>> handlerMap = new HashMap<>();
 
     public void register(Object receiver) {
-        Set<Method> methods = ReflectUtil.findDeclaredMethodsByAnnotation(receiver.getClass(), IRouteEvent.class);
+        Set<Method> methods;
+
+        // RouteEvent即将废弃，此段代码不再维护
+        methods = ReflectUtil.findDeclaredMethodsByAnnotation(receiver.getClass(), RouteEvent.class);
+        for (Method method : methods) {
+            RouteEvent annotation = method.getAnnotation(RouteEvent.class);
+            Set<EventHandler> handlers = handlerMap.get(annotation.uri());
+            if (handlers == null) {
+                handlers = new HashSet<>();
+            }
+
+            handlers.add(new EventHandler(receiver, method, annotation.threadMode()));
+            handlerMap.put(annotation.uri(), handlers);
+        }
+        // RouteEvent即将废弃
+
+        methods = ReflectUtil.findDeclaredMethodsByAnnotation(receiver.getClass(), IRouteEvent.class);
         for (Method method : methods) {
             IRouteEvent annotation = method.getAnnotation(IRouteEvent.class);
             Set<EventHandler> handlers = handlerMap.get(annotation.uri());
