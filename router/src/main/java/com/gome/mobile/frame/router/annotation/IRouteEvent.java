@@ -12,7 +12,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Target(ElementType.METHOD)
 @Retention(RUNTIME)
-public @interface RouteEvent {
+public @interface IRouteEvent {
     String uri();
 
     ThreadMode threadMode() default ThreadMode.Posting;
