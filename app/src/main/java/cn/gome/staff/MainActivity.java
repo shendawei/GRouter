@@ -14,7 +14,7 @@ import com.gome.mobile.frame.router.Postcard;
 import com.gome.mobile.frame.router.RequestMethod;
 import com.gome.mobile.frame.router.ThreadMode;
 import com.gome.mobile.frame.router.adapter.ParametersPraserAdapter;
-import com.gome.mobile.frame.router.annotation.RouteEvent;
+import com.gome.mobile.frame.router.annotation.IRouteEvent;
 import com.gome.mobile.frame.router.intf.NavigationCallback;
 import com.gome.mobile.frame.router.intf.RequestCallback;
 
@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
 
     private static final String TAG = MainActivity.class.getName();
 
-    @RouteEvent(uri = "/demo/event", threadMode = ThreadMode.Main)
+    @IRouteEvent(uri = "/demo/event", threadMode = ThreadMode.Main)
     public void onEvent(Bundle params) {
         Log.d("RouteDemoMain", "Got text: " + params.getString("text"));
         Toast.makeText(MainActivity.this, params.getString("text"), Toast.LENGTH_SHORT).show();

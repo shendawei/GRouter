@@ -1,6 +1,7 @@
 package com.gome.mobile.frame.router.utils;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -73,5 +74,17 @@ public class ReflectUtil {
         }
 
         return result;
+    }
+
+    @Nullable
+    public static <T extends Annotation> T getParameterAnnotation(Method method, int index, Class<T> annotationType) {
+        Annotation[] annotations = method.getParameterAnnotations()[index];
+        for (Annotation annotation : annotations) {
+            if (annotation.annotationType().equals(annotationType)) {
+                return annotationType.cast(annotation);
+            }
+        }
+
+        return null;
     }
 }

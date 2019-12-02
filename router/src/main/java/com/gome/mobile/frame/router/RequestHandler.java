@@ -2,7 +2,9 @@ package com.gome.mobile.frame.router;
 
 import android.os.Bundle;
 
+import com.gome.mobile.frame.router.annotation.IParam;
 import com.gome.mobile.frame.router.intf.Result;
+import com.gome.mobile.frame.router.utils.ReflectUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -24,6 +26,7 @@ class RequestHandler {
         try {
             return invokeMethod(service, params, result);
         } catch (Exception e) {
+            e.printStackTrace();
             result.error(null, "Error in invoking handler.", e);
         }
 
@@ -31,8 +34,11 @@ class RequestHandler {
     }
 
     public static boolean isAcceptableMethod(Method method) {
-        for (Class<?> type : method.getParameterTypes()) {
-            if (!type.equals(Bundle.class) && !type.equals(Result.class)) {
+        Class<?>[] paramTypes = method.getParameterTypes();
+        for (int i = 0; i < paramTypes.length; i++) {
+            IParam annotation = ReflectUtil.getParameterAnnotation(method, i, IParam.class);
+            if (annotation == null && !paramTypes[i].equals(Bundle.class)
+                    && !paramTypes[i].equals(Result.class)) {
                 return false;
             }
         }
@@ -40,15 +46,22 @@ class RequestHandler {
         return true;
     }
 
-    private Object invokeMethod(RouteService service, Bundle params, Result result)
+    private Object invokeMethod(RouteService service, Bundle paramBundle, Result result)
             throws InvocationTargetException, IllegalAccessException {
-
         Class<?>[] paramTypes = method.getParameterTypes();
         Object[] arguments = new Object[paramTypes.length];
 
         for (int i = 0; i < paramTypes.length; ++i) {
-            if (paramTypes[i].equals(Bundle.class)) {
-                arguments[i] = params;
+            //TODO: IParam annotation is incubating feature, do not publish until well designed.
+            IParam annotation = ReflectUtil.getParameterAnnotation(method, i, IParam.class);
+            if (annotation != null) {
+                String paramName = annotation.value();
+                if (!paramBundle.containsKey(paramName)) {
+                    throw new RuntimeException("No such parameter: " + paramName);
+                }
+                arguments[i] = paramBundle.get(annotation.value());
+            } else if (paramTypes[i].equals(Bundle.class)) {
+                arguments[i] = paramBundle;
             } else if (paramTypes[i].equals(Result.class)) {
                 arguments[i] = result;
             }
