@@ -12,6 +12,6 @@
 
     <declare-styleable name="RouteLayout">
         <attr name="conditionUri" format="string" />
-        <attr name="slotId" format="reference" />
+        <attr name="slotViewId" format="reference" />
     </declare-styleable>
 </resources>

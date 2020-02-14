@@ -15,7 +15,7 @@ public class RouteLayout extends RouteView {
     protected String conditionUri = null;
 
     @IdRes
-    protected int slotId = 0;
+    protected int slotViewId = 0;
 
     public RouteLayout(Context context) {
         super(context);
@@ -32,8 +32,8 @@ public class RouteLayout extends RouteView {
         if (a.hasValue(R.styleable.RouteLayout_conditionUri)) {
             conditionUri = a.getString(R.styleable.RouteLayout_conditionUri);
         }
-        if (a.hasValue(R.styleable.RouteLayout_slotId)) {
-            slotId = a.getResourceId(R.styleable.RouteLayout_slotId, slotId);
+        if (a.hasValue(R.styleable.RouteLayout_slotViewId)) {
+            slotViewId = a.getResourceId(R.styleable.RouteLayout_slotViewId, slotViewId);
         }
         a.recycle();
     }
@@ -57,15 +57,15 @@ public class RouteLayout extends RouteView {
 
     @Override
     protected void onRouteSuccess(View value) {
-        if (slotId == 0) {
+        if (slotViewId == 0) {
             return;
         }
 
-        View slotView = findViewById(slotId);
+        View slotView = findViewById(slotViewId);
         if (slotView instanceof ViewGroup) {
             ((ViewGroup) slotView).addView(value);
         } else {
-            throw new RuntimeException("Attribute 'slotId' MUST reference a ViewGroup");
+            throw new RuntimeException("Attribute 'slotViewId' MUST reference a ViewGroup");
         }
     }
 
@@ -89,12 +89,12 @@ public class RouteLayout extends RouteView {
         onStatusChange();
     }
 
-    public int getSlotId() {
-        return slotId;
+    public int getSlotViewId() {
+        return slotViewId;
     }
 
-    public void setSlotId(int slotId) {
-        this.slotId = slotId;
+    public void setSlotViewId(int slotViewId) {
+        this.slotViewId = slotViewId;
         onStatusChange();
     }
 }
