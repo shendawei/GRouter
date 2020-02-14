@@ -31,7 +31,8 @@ class ScanUtil {
                     InputStream inputStream = file.getInputStream(jarEntry)
                     scanClass(inputStream)
                     inputStream.close()
-                } else if (ScanSetting.GENERATE_TO_CLASS_FILE_NAME == entryName) {
+                } 
+                if (ScanSetting.GENERATE_TO_CLASS_FILE_NAME == entryName) {
                     // mark this jar file contains LogisticsCenter.class
                     // After the scan is complete, we will generate register code into this file
                     RegisterTransform.fileContainsInitClass = destFile
