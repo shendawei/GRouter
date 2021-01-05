@@ -23,7 +23,7 @@ android {
             ndk {
                 moduleName project.ext.getProperty("moduleName")
                 //abiFilters "armeabi", "armeabi-v7a", "x86"
-                setAbiFilters project.ext.has("abiFilters") ? project.ext.getProperty("abiFilters") : ["armeabi"]
+                setAbiFilters project.ext.has("abiFilters") ? project.ext.getProperty("abiFilters") : ["armeabi-v7a"]
             }
         }
 

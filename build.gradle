@@ -11,14 +11,14 @@ allprojects {
         }
     }
     ext {
-        compileSdkVersion = 26
+        compileSdkVersion = 28
         buildToolsVersion = "28.0.3"
         targetSdkVersion = 26
-        minSdkVersion = 16
+        minSdkVersion = 17
     }
 
     group getProperty("ROUTER_GROUP")
-    version getProperty("ROUTER_VERSION")
+    version getProperty("ROUTER_VERSION")+ "@" + getProperty('GRADLE_VERSION')
 }
 
 task clean(type: Delete) {

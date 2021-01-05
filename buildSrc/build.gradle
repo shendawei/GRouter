@@ -3,7 +3,7 @@ config.load(new FileInputStream(project.file('../gradle.properties')))
 
 ext {
     groupId = config.getProperty('ROUTER_GROUP')
-    version = config.getProperty('ROUTER_VERSION')
+    version = config.getProperty('ROUTER_VERSION') + "@" + config.getProperty('GRADLE_VERSION')
     artifactId = "build"
     packaging = "jar"
 
@@ -31,8 +31,7 @@ dependencies {
     compile gradleApi()
     compile localGroovy()
 
-    compile 'com.android.tools.build:gradle:2.3.0'
-//    implementation 'com.android.tools.build:gradle:3.2.1'
+    compile 'com.android.tools.build:gradle:' + config.getProperty('GRADLE_VERSION')
 }
 
 uploadArchives {
