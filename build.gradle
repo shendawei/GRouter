@@ -18,7 +18,7 @@ allprojects {
     }
 
     group getProperty("ROUTER_GROUP")
-    version getProperty("ROUTER_VERSION")+ "@" + getProperty('GRADLE_VERSION')
+    version getProperty("ROUTER_VERSION")+ "-" + getProperty('GRADLE_VERSION')
 }
 
 task clean(type: Delete) {

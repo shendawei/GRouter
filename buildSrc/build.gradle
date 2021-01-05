@@ -3,7 +3,7 @@ config.load(new FileInputStream(project.file('../gradle.properties')))
 
 ext {
     groupId = config.getProperty('ROUTER_GROUP')
-    version = config.getProperty('ROUTER_VERSION') + "@" + config.getProperty('GRADLE_VERSION')
+    version = config.getProperty('ROUTER_VERSION') + "-" + config.getProperty('GRADLE_VERSION')
     artifactId = "build"
     packaging = "jar"
 
