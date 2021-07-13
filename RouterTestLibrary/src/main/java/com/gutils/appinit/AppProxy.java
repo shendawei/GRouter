@@ -10,6 +10,11 @@ import com.gome.mobile.frame.router.annotation.IApp;
 public class AppProxy implements App {
     @Override
     public void dispatcher(Application application, boolean debug) {
-        Log.d("appinit", "IApp Proxy");
+        Log.d("GRouter", "AppProxy Proxy");
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

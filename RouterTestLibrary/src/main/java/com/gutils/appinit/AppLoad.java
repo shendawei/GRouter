@@ -10,6 +10,11 @@ import com.gome.mobile.frame.router.annotation.IApp;
 public class AppLoad implements App {
     @Override
     public void dispatcher(Application application, boolean debug) {
-        Log.d("appinit","IApp Load");
+        Log.d("GRouter","AppLoad Load");
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

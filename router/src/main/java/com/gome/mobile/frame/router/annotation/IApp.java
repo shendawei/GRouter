@@ -18,4 +18,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface IApp {
     int priority() default 0;
+
+    boolean subThread() default false;
 }

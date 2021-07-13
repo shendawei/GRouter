@@ -6,13 +6,13 @@ import android.util.Log;
 import com.gome.mobile.frame.router.App;
 import com.gome.mobile.frame.router.annotation.IApp;
 
-@IApp(priority = 1)
-public class AppTest implements App {
+@IApp(priority = 100, subThread = true)
+public class AppSub1 implements App {
     @Override
     public void dispatcher(Application application, boolean debug) {
-        Log.d("GRouter", "AppTest Proxy");
+        Log.d("GRouter", "AppSub1 Proxy");
         try {
-            Thread.sleep(300);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

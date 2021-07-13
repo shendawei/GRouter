@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -43,7 +45,7 @@ import java.util.Set;
  */
 public class GRouter {
 
-    private static final String TAG = GRouter.class.getName();
+    private static final String TAG = GRouter.class.getSimpleName();
     private static final GRouter router = new GRouter();
     private static final ServiceManager mServiceManager = new ServiceManager();
     private static final EventManager mEventManager = new EventManager();
@@ -80,21 +82,61 @@ public class GRouter {
      *
      * @param application
      */
-    public void dispatcher(Application application, boolean debug) {
+    public void dispatcher(final Application application, final boolean debug) {
         Collections.sort(mAppClassList, new Comparator<AppEntity>() {
             @Override
             public int compare(AppEntity t0, AppEntity t1) {
                 return t0.getPriority().compareTo(t1.getPriority());
             }
         });
+        final List<AppEntity> subThreadList = new ArrayList<AppEntity>();
         for (AppEntity entity : mAppClassList) {
-            Class appClass = entity.classApp;
-            try {
-                App app = (App) appClass.newInstance();
-                app.dispatcher(application, debug);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (!entity.isSubThread()) {
+                Class appClass = entity.classApp;
+                try {
+                    long start = 0;
+                    if (debug) {
+                        start = System.currentTimeMillis();
+                    }
+                    App app = (App) appClass.newInstance();
+                    app.dispatcher(application, debug);
+                    if (debug) {
+                        long end = System.currentTimeMillis();
+                        Log.d(TAG, "[MainThread]" + appClass.getSimpleName() + ":" + (end - start));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                subThreadList.add(entity);
             }
+        }
+        if (subThreadList.size() > 0) {
+            HandlerThread appThreadInit = new HandlerThread("GRouterSubThreadInit");
+            appThreadInit.start();
+            new Handler(appThreadInit.getLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    for (AppEntity entity : subThreadList){
+                        Class appClass = entity.classApp;
+                        try {
+                            long start = 0;
+                            if (debug) {
+                                start = System.currentTimeMillis();
+                            }
+                            App app = (App) appClass.newInstance();
+                            app.dispatcher(application, debug);
+                            if (debug) {
+                                long end = System.currentTimeMillis();
+                                Log.d(TAG, "[SubThread]" + appClass.getSimpleName() + ":" + (end - start));
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+
         }
     }
 
@@ -133,7 +175,7 @@ public class GRouter {
         Annotation anno = className.getAnnotation(IApp.class);
         if (checkAnnotationNotNull(anno) && App.class.isAssignableFrom(className)) {
             IApp app = (IApp) anno;
-            mAppClassList.add(new AppEntity(app.priority(), className));
+            mAppClassList.add(new AppEntity(app.priority(), app.subThread(), className));
             return true;
         }
         return false;
@@ -654,7 +696,7 @@ public class GRouter {
      */
     @Deprecated
     public Object navigationService(String path, NavigationCallback callback) {
-        return navigationService((Context)null, path, null);
+        return navigationService((Context) null, path, null);
     }
 
     /**
@@ -925,10 +967,12 @@ public class GRouter {
     private static class AppEntity {
         private Integer priority;
         private Class classApp;
+        private boolean subThread;
 
-        public AppEntity(int priority, Class classApp) {
+        public AppEntity(int priority, boolean subThread, Class classApp) {
             this.priority = priority;
             this.classApp = classApp;
+            this.subThread = subThread;
         }
 
         public Integer getPriority() {
@@ -945,6 +989,14 @@ public class GRouter {
 
         public void setClassApp(Class classApp) {
             this.classApp = classApp;
+        }
+
+        public boolean isSubThread() {
+            return subThread;
+        }
+
+        public void setSubThread(boolean subThread) {
+            this.subThread = subThread;
         }
     }
 
